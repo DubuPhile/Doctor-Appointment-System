@@ -1,0 +1,39 @@
+section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+body{
+  background-color: rgb(128, 34, 236);
+}
+
+.logform-container {
+  width: 100%;
+  max-width: 320px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
+  background-color: rgba(0,0,0,0.4);
+}
+h2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: yellow;
+}
+
+.custom-color {
+  color: yellow;
+}
+
+.register-btn{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
