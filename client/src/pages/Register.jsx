@@ -1,12 +1,32 @@
 import '../styles/registerStyles.css';
 import { Form, Input } from "antd";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { message } from 'antd';
+import axios from '../api/axios'
 
 const Register = () => {
 
-  const onFinishHandler = (values) => {
+  const navigate = useNavigate();
+
+  const onFinishHandler = async (values) => {
     delete values.confirmPassword;
-    console.log(values)
+    try{
+      const res = await axios.post('/register', 
+        JSON.stringify(values),{
+          headers: {'Content-Type': 'application/json'},
+          withCredentials: true,
+        }
+      );
+      if(res.data.success){
+        message.success('Register Successfully')
+        navigate('/login')
+      } else {
+        message.error(res.data.message);
+      }
+
+    } catch(err){
+      console.error(err.message)
+    }
   }
 
   return (
@@ -16,11 +36,11 @@ const Register = () => {
         <Form layout="vertical" onFinish={onFinishHandler}>
           <h3>Register Form</h3>
           <div>
-            <Form.Item label ={<span className="custom-color">Name</span>} name="name">
-              <Input type= "text" required/>
+            <Form.Item label ={<span className="custom-color">Username</span>} name="user">
+              <Input type= "text" required autoComplete='username'/>
             </Form.Item>
             <Form.Item label ={<span className="custom-color">Email</span>} name="email">
-              <Input type= "email" required/>
+              <Input type= "email" required />
             </Form.Item>
             <Form.Item 
               label = {<span className="custom-color">Password</span>} 
@@ -29,7 +49,7 @@ const Register = () => {
               ]} 
               hasFeedback 
             >
-              <Input.Password placeholder='Enter your Password'/>
+              <Input.Password placeholder='Enter your Password' autoComplete='new-password'/>
             </Form.Item>
             <Form.Item 
               label ={<span className="custom-color">Confirm Password</span>}
@@ -48,7 +68,7 @@ const Register = () => {
                 }),
               ]}
             >
-              <Input.Password placeholder='Confirm password' required/>
+              <Input.Password placeholder='Confirm password' autoComplete='new-password' />
             </Form.Item>
           </div>
           <div className='register-btn'>

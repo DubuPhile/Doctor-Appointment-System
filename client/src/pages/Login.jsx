@@ -15,14 +15,14 @@ const Login = () => {
       <div className="logform-container">
         <Form layout="vertical" onFinish={onFinishHandler}>
           <h2>Sign in</h2>
-          <Form.Item label ={<span className="custom-color">Name</span>} name="name">
-            <Input type= "text" required/>
+          <Form.Item label ={<span className="custom-color">Username</span>} name="user">
+            <Input type= "text" required autoComplete='username'/>
           </Form.Item>
           <Form.Item 
             label = {<span className="custom-color">Password</span>} 
             name="password"
           >
-            <Input.Password placeholder='Enter your Password' required/>
+            <Input.Password placeholder='Enter your Password' autoComplete='current-password' required/>
           </Form.Item>
           <div className='register-btn'>
             <button className="btn btn-primary" type="submit">Sign-in</button>
