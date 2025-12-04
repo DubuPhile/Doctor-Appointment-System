@@ -4,6 +4,9 @@ const colors = require('colors')
 const morgan = require('morgan')
 const connectDB = require('./config/db')
 const cors = require('cors');
+const corsOptions = require('./config/corsOptions');
+const verifyJWT = require('./middleware/verifyJWT')
+const credentials = require('./middleware/credentials')
 
 const PORT = process.env.PORT || 3500
 
@@ -12,10 +15,8 @@ connectDB();
 
 const app = express()
 
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
+app.use(credentials);
+app.use(cors(corsOptions));
 
 //middleware
 app.use(express.json())
@@ -24,6 +25,23 @@ app.use(morgan('dev'))
 //routes
 app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
+
+app.use(verifyJWT);
+app.use('/users', require('./routes/api/Users'))
+
+app.all('{*splat}', (req, res) => {
+    res.status(404);
+    if (req.accepts('html')){
+        res.sendFile(path.join(__dirname, 'views', '404.html'));
+    }
+    else if (req.accepts('json')){
+        res.json({ error: '404 Not Found'});
+    }
+    else {
+        res.type('txt').send('404 Not Found');
+    }
+    
+});
 
 app.listen(PORT, () => {
     console.log(

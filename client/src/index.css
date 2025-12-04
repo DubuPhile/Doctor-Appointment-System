@@ -3,3 +3,14 @@
     margin: 0;
     box-sizing: border-box;
 }
+
+body{
+    background-color:rgb(128, 34, 236);
+}
+
+.spinner{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

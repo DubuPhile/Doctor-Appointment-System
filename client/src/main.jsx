@@ -6,19 +6,23 @@ import App from './App.jsx'
 import { AuthProvider } from './context/AuthProvider.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
+import { Provider } from 'react-redux'
+import store from './redux/store.jsx'
 
 if (process.env.NODE_ENV === 'production'){
   disableReactDevTools();
 }
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/*" element={<App />}/>
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
-  </StrictMode>,
+  <Provider store = {store}>
+    <StrictMode>
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            <Route path="/*" element={<App />}/>
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </StrictMode>
+  </Provider>
 )

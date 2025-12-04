@@ -5,10 +5,6 @@ section {
   height: 100vh;
 }
 
-body{
-  background-color: rgb(128, 34, 236);
-}
-
 .regform-container {
   width: 100%;
   max-width: 420px;

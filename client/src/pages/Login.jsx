@@ -5,6 +5,8 @@ import axios from '../api/axios'
 import { message } from 'antd';
 import { useRef, useState,useEffect } from 'react';
 import useAuth from '../hooks/useAuth'
+import { useDispatch } from 'react-redux';
+import { showLoading,hideLoading } from '../redux/features/alertSlice';
 
 
 const Login = () => {
@@ -17,31 +19,36 @@ const Login = () => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if(userRef.current){
     userRef.current.focus();
     }
   },[])
 
-  const onFinishHandler = async(values) => {
+  const onFinishHandler = async(e) => {
+    
     try{
+      dispatch(showLoading())
       const res = await axios.post('/login', 
-        values,
+        {user, password},
         {
           headers: {'Content-Type': 'application/json'},
           withCredentials: true,
         }
-        
       );
+      dispatch(hideLoading())
       if(res.status === 200){
         message.success('Login Successfully')
         const accessToken = res?.data.accessToken;
-        setAuth({user: values.user , accessToken: accessToken})
+        setAuth({ user, accessToken: accessToken})
         setUser('');
         setPassword('');
         navigate('/')
       } 
     } catch(err){
+      dispatch(hideLoading())
       if(!err?.response) {
         message.error('No response from Server');  
       }

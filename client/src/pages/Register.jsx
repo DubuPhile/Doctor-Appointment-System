@@ -3,6 +3,8 @@ import { Form, Input } from "antd";
 import { Link, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import axios from '../api/axios'
+import { useDispatch } from 'react-redux';
+import { showLoading,hideLoading } from '../redux/features/alertSlice';
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -10,16 +12,19 @@ const PWD_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const Register = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onFinishHandler = async (values) => {
     delete values.confirmPassword;
     try{
+      dispatch(showLoading())
       const res = await axios.post('/register', 
         JSON.stringify(values),{
           headers: {'Content-Type': 'application/json'},
           withCredentials: true,
         }
       );
+      dispatch(hideLoading())
       
       if(res.data.success){
         message.success('Register Successfully')
@@ -27,6 +32,7 @@ const Register = () => {
       } 
   
     } catch(err){
+      dispatch(hideLoading())
       if(!err?.response) {
         message.error('No response from Server');
       }

@@ -10,6 +10,13 @@ const userSchema = new schema({
         type: String,
         required: [true, 'Email is required']
     },
+    roles: {
+        User: {
+            type: Number,
+            default: 2001
+        },
+        Admin: Number
+    },
     password:{
         type: String,
         required: [true, 'Password is required']

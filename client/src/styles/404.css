@@ -1,0 +1,15 @@
+.Missing{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.Page404{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 350px;
+    border-radius: 15px;
+}
