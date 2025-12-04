@@ -32,7 +32,7 @@ h2 {
   color: yellow;
 }
 
-.register-btn{
+.login-btn{
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

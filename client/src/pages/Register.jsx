@@ -20,15 +20,22 @@ const Register = () => {
           withCredentials: true,
         }
       );
+      
       if(res.data.success){
         message.success('Register Successfully')
         navigate('/login')
-      } else {
-        message.error(res.data.message);
-      }
-
+      } 
+  
     } catch(err){
-      console.error(err.message)
+      if(!err?.response) {
+        message.error('No response from Server');
+      }
+      else if (err.response?.status === 409){
+        message.error('Email has been Taken');
+      }
+      else {
+        message.error('Registration Failed');
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 const userModel = require('../models/userModels');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken')
 
 const registerController = async(req, res) => {
     try{
@@ -21,7 +22,51 @@ const registerController = async(req, res) => {
     } 
 }
 
-const loginController = () => {}
+
+const loginController = async(req, res) => {
+    try{
+        const { user, password } = req.body;
+
+        const foundUser = await userModel.findOne({ 
+            $or: [
+                { user: user },
+                { email: user }
+            ]
+         }).exec();
+        if(!foundUser){
+            return res.sendStatus(401)
+        }
+        const match = await bcrypt.compare(password, foundUser.password);
+        if(match) {
+            const accessToken = jwt.sign(
+                {
+                    "UserInfo":{
+                        "user": foundUser.user,
+                    }
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn:'1d'}
+            );
+            const refreshToken = jwt.sign(
+                {"user": foundUser.user},
+                process.env.REFRESH_TOKEN_SECRET,
+                {expiresIn:'20s'}
+            );
+            foundUser.refreshToken = refreshToken;
+            const result = await foundUser.save();
+            console.log(result)
+
+            res.cookie('jwt', refreshToken, {httpOnly: true, samesite: 'none',secure: true, maxAge: 24 * 60 * 60 * 1000});
+            res.json({ accessToken });
+        }
+        else {
+            res.sendStatus(401)
+        }
+    } catch(err){
+        console.log(err)
+        res.status(500).send({message: `Error Login ${err.message}`})
+    }
+}
 
 
 module.exports = {loginController, registerController}

@@ -22,7 +22,8 @@ app.use(express.json())
 app.use(morgan('dev'))
 
 //routes
-app.use('/register', require('./routes/register'))
+app.use('/register', require('./routes/register'));
+app.use('/login', require('./routes/login'));
 
 app.listen(PORT, () => {
     console.log(
