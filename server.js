@@ -25,6 +25,7 @@ app.use(morgan('dev'))
 //routes
 app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
+app.use('/refresh', require('./routes/refreshToken'));
 
 app.use(verifyJWT);
 app.use('/users', require('./routes/api/Users'))

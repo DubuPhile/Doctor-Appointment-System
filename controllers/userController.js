@@ -43,6 +43,7 @@ const loginController = async(req, res) => {
                 {
                     "UserInfo":{
                         "user": foundUser.user,
+                        "email": foundUser.email,
                         "roles": roles
                     }
                 },

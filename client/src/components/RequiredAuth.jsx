@@ -1,0 +1,29 @@
+import { useEffect } from "react";
+import { useLocation, Navigate, Outlet } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import { jwtDecode } from "jwt-decode";
+import { message } from "antd";
+
+const RequireAuth = ({ allowedRoles }) => {
+  const { auth } = useAuth();
+  const location = useLocation();
+
+  const decoded = auth?.accessToken ? jwtDecode(auth.accessToken) : undefined;
+  const roles = decoded?.UserInfo?.roles || [];
+
+  const hasAccess = roles.some(role => allowedRoles?.includes(role));
+
+  useEffect(() => {
+    if (!hasAccess) {
+      message.error("Unauthorized");
+    }
+  }, [hasAccess]);
+
+  return hasAccess ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
+  );
+};
+
+export default RequireAuth;
