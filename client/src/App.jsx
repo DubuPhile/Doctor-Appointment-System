@@ -6,6 +6,7 @@ import Page404 from './pages/404'
 import { useSelector } from 'react-redux'
 import Spinner from './components/Spinner'
 import RequireAuth from './components/RequiredAuth'
+import Logout from './components/logout'
 
 function App() {
   const {loading} = useSelector(state => state.alerts)
@@ -18,6 +19,7 @@ function App() {
 
             <Route element = {<RequireAuth allowedRoles={[2001]}/>}>
             <Route path='/' element = {<Home />} />
+            <Route path = '/logout' element = {<Logout />} />
             </Route>
 
             <Route path ="*" element = {<Page404/>}/>
