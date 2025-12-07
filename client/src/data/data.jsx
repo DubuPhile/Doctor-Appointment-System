@@ -21,7 +21,7 @@ export const SideBarMenu = [
     },
     {
         name:"Logout",
-        path:"/lagout",
+        path:"/logout",
         icon:"fa-solid fa-right-from-bracket"
     }
 ];
