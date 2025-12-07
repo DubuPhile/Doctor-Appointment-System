@@ -13,12 +13,6 @@ const RequireAuth = ({ allowedRoles }) => {
 
   const hasAccess = roles.some(role => allowedRoles?.includes(role));
 
-  useEffect(() => {
-    if (!hasAccess) {
-      message.error("Unauthorized");
-    }
-  }, [hasAccess]);
-
   return hasAccess ? (
     <Outlet />
   ) : (
