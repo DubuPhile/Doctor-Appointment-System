@@ -8,6 +8,7 @@ import Spinner from './components/Spinner'
 import RequireAuth from './components/RequiredAuth'
 import Logout from './components/logout'
 import PersistLogin from './components/PersistLogin'
+import Unautorized from './pages/Unautorized'
 
 function App() {
   const {loading} = useSelector(state => state.alerts)
@@ -25,6 +26,7 @@ function App() {
               </Route>
             </Route>
 
+            <Route path ="/unautorized" element = {<Unautorized />}/>
             <Route path ="*" element = {<Page404/>}/>
           </Routes>
         )}
