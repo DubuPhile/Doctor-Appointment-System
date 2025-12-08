@@ -9,14 +9,14 @@ const handleLogout = async (req, res) => {
     //If refresh token in DB?
     const foundUser = await User.findOne({ refreshToken }).exec();
     if(!foundUser) {
-        res.clearCookie('jwt', {httpOnly: true, samesite: 'none',secure: true });
+        res.clearCookie('jwt', {httpOnly: true, samesite: 'None',secure: true });
         return res.sendStatus(204);
     }
     
     foundUser.refreshToken = '';
     const result = await foundUser.save();
     console.log(result);
-    res.clearCookie('jwt', {httpOnly: true, samesite: 'none',secure: true }); // sercure: true - only serves on https
+    res.clearCookie('jwt', {httpOnly: true, samesite: 'None',secure: true }); // sercure: true - only serves on https
     res.sendStatus(204);
 }       
 

@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import Spinner from './components/Spinner'
 import RequireAuth from './components/RequiredAuth'
 import Logout from './components/logout'
+import PersistLogin from './components/PersistLogin'
 
 function App() {
   const {loading} = useSelector(state => state.alerts)
@@ -16,10 +17,12 @@ function App() {
           <Routes>
             <Route path='/login' element = {<Login />} />
             <Route path='/register' element = {<Register />} />
-
-            <Route element = {<RequireAuth allowedRoles={[2001]}/>}>
-            <Route path='/' element = {<Home />} />
-            <Route path = '/logout' element = {<Logout />} />
+            
+            <Route element = {<PersistLogin />}>
+              <Route element = {<RequireAuth allowedRoles={[2001]}/>}>
+                <Route path='/' element = {<Home />} />
+                <Route path = '/logout' element = {<Logout />} />
+              </Route>
             </Route>
 
             <Route path ="*" element = {<Page404/>}/>

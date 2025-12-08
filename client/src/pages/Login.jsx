@@ -42,7 +42,7 @@ const Login = () => {
       if(res.status === 200){
         message.success('Login Successfully')
         const accessToken = res?.data.accessToken;
-        setAuth({ user, accessToken: accessToken})
+        setAuth({ user, accessToken})
         setUser('');
         setPassword('');
         navigate('/')

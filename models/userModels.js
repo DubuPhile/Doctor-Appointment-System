@@ -20,7 +20,8 @@ const userSchema = new schema({
     password:{
         type: String,
         required: [true, 'Password is required']
-    }
+    },
+    refreshToken: String
 })
 
 module.exports = mongoose.model('users', userSchema);
