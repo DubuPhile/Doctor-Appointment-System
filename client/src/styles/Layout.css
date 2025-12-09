@@ -48,7 +48,7 @@
     margin-top: 30px;
 }
 
-.menu-item a {
+.menu-item a, .Logoutbtn {
     color:white;
     text-decoration: none;
     font-size: 1.2rem;
@@ -59,7 +59,7 @@
 }
 
 .menu-item:hover i,
-.menu-item:hover a {
+.menu-item:hover a, .logoutIcon:hover {
   color: #4C9AFF;
   transform: scale(1.2);
 }
@@ -71,4 +71,34 @@
 }
 .active a, .active i{
     color:rgb(51, 1, 1);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 15px;
+    height: 100%;
+}
+.header-content i{
+    margin-right: 20px;
+    font-size: 1.2rem;
+}
+.header-content a{
+    text-decoration: none;
+    color: blue;
+    margin: 0 10px;
+    text-transform: uppercase;
+}
+.Logoutbtn{
+    background-color: rgb(51, 1, 1);
+    border: none;
+}
+.Logout {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.Logoutbtn:hover{
+    color: #4C9AFF;
 }

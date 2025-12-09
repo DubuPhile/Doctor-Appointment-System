@@ -1,6 +1,7 @@
 const userModel = require('../models/userModels');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const cookieOptions = require('./cookieOption');
 
 const registerController = async(req, res) => {
     try{
@@ -53,13 +54,13 @@ const loginController = async(req, res) => {
             const refreshToken = jwt.sign(
                 {"user": foundUser.user},
                 process.env.REFRESH_TOKEN_SECRET,
-                {expiresIn:'20s'}
+                {expiresIn:'1h'}
             );
             foundUser.refreshToken = refreshToken;
             const result = await foundUser.save();
             console.log(result)
 
-            res.cookie('jwt', refreshToken, {httpOnly: true, samesite: 'None',secure: true, maxAge: 24 * 60 * 60 * 1000});
+            res.cookie('jwt', refreshToken, { cookieOptions , maxAge: 24 * 60 * 60 * 1000});
             res.json({ accessToken });
         }
         else {

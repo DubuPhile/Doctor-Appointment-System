@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -16,17 +16,19 @@ function App() {
     <>
         {loading ? (<Spinner/>) : (
           <Routes>
+            <Route path="/" element = {<Navigate to ="/login"/>}/>
             <Route path='/login' element = {<Login />} />
             <Route path='/register' element = {<Register />} />
             
             <Route element = {<PersistLogin />}>
-              <Route element = {<RequireAuth allowedRoles={[2001]}/>}>
-                <Route path='/' element = {<Home />} />
+              <Route element = {<RequireAuth allowedRoles={[2001,5150]}/>}>
+                <Route path='/home' element = {<Home />} />
                 <Route path = '/logout' element = {<Logout />} />
+                <Route path ="/unautorized" element = {<Unautorized />}/>
               </Route>
             </Route>
 
-            <Route path ="/unautorized" element = {<Unautorized />}/>
+            
             <Route path ="*" element = {<Page404/>}/>
           </Routes>
         )}

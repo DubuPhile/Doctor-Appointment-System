@@ -3,8 +3,8 @@ import '../styles/404.css';
 
 const Unautorized = () => {
   return (
-    <div className="Missing">
-            <article className="Page404" style={{ padding: "100px" }}>
+    <div className="Unauto">
+            <article className="Unautorized" style={{ padding: "100px" }}>
                 <h1>Oops!</h1>
                 <p>Unautorized!</p>
                 <div className="flexGrow">

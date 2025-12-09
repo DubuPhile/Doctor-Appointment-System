@@ -21,7 +21,15 @@ const userSchema = new schema({
         type: String,
         required: [true, 'Password is required']
     },
+    notification: {
+        type: Array,
+        default: [],
+    },
+    seennotification: {
+        type: Array,
+        default: [],
+    },
     refreshToken: String
 })
 
-module.exports = mongoose.model('users', userSchema);
+module.exports = mongoose.model('User', userSchema);

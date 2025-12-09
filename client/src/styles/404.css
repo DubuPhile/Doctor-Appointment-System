@@ -1,11 +1,11 @@
-.Missing{
+.Missing, .Unauto{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-.Page404{
+.Page404, .Unautorized{
     background-color: white;
     display: flex;
     flex-direction: column;

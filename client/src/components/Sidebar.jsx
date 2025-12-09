@@ -1,7 +1,11 @@
-import { SideBarMenu } from "../data/data"
+import { userMenu, AdminMenu } from "../data/data"
 import { Link, useLocation } from "react-router-dom"
+import { useUserInfo } from "./useUserInfo";
 const Sidebar = () => {
     const location = useLocation();
+    const {roles} = useUserInfo();
+    const SideBarMenu = roles.includes(2001) ? userMenu : AdminMenu;
+    
     return(
         <>
             {SideBarMenu.map(menu => {

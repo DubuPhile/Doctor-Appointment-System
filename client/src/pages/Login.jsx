@@ -45,7 +45,7 @@ const Login = () => {
         setAuth({ user, accessToken})
         setUser('');
         setPassword('');
-        navigate('/')
+        navigate('/home')
       } 
     } catch(err){
       dispatch(hideLoading())

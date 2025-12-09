@@ -1,17 +1,26 @@
 import { useEffect } from 'react';
-import logout from '../hooks/useLogout'
+import useLogout from '../hooks/useLogout'
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
-
-
-const logOut = () => {
+const LogOut = () => {
     const navigate = useNavigate();
+    const logout = useLogout();
 
-    useEffect(() => {
+    const signOut = async () => {
+        await logout();
         navigate('/login');
-    },[logout])
-
-    logout();
+    }
+    return (
+        <div 
+            className="menu-item Logout"
+            onClick={signOut}
+        >
+            <i className="fa-solid fa-right-from-bracket logoutIcon"></i>
+            <button className='Logoutbtn'>Logout</button>
+        </div>
+    )
+    
 }
 
-export default logOut
+export default LogOut
