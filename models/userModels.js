@@ -25,7 +25,7 @@ const userSchema = new schema({
         type: Array,
         default: [],
     },
-    seennotification: {
+    seenNotification: {
         type: Array,
         default: [],
     },
