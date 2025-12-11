@@ -3,9 +3,12 @@ import "../styles/Layout.css"
 import Sidebar from "./Sidebar"
 import {useUserInfo} from "./useUserInfo"
 import LogOut from "./logout"
+import { Badge } from "antd"
+import useNotification from "../hooks/useNotification"
 
 const Layout = ({children}) => {
     const {user} = useUserInfo();
+    const {notification, seenNotification, setNotification, setSeenNotification} = useNotification();
 
   return (
     <main className='main'>
@@ -23,7 +26,9 @@ const Layout = ({children}) => {
             <div className="content">
                 <header className='header'>
                     <div className="header-content">
+                        <Badge count ={notification.length} showZero>
                         <i className="fa-solid fa-bell"></i>
+                        </Badge>
                         <Link to ='/profile'>{ user || 'Guest'}</Link>
                     </div>
                 </header>
