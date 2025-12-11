@@ -2,7 +2,9 @@ const userModel = require('../models/userModels');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieOptions = require('./cookieOption');
+const doctorsModel = require ('../models/doctorsModels');
 
+//Register Controller
 const registerController = async(req, res) => {
     try{
         const existingUser = await userModel.findOne({email: req.body.email})
@@ -23,7 +25,7 @@ const registerController = async(req, res) => {
     } 
 }
 
-
+//Login Controller
 const loginController = async(req, res) => {
     try{
         const { user, password } = req.body;
@@ -70,7 +72,74 @@ const loginController = async(req, res) => {
         console.log(err)
         res.status(500).send({message: `Error Login ${err.message}`})
     }
+};
+
+//apply Doctor Controller
+const applyDoctorController = async( req, res ) => {
+    try{
+        const newDoctor = new doctorsModel({
+            ...req.body,
+            status: 'pending',
+        })
+        await newDoctor.save()
+        const adminUser = await userModel.findOne({"roles.Admin": 5150})
+        const notification = adminUser.notification
+        notification.push({
+            type:"apply-doctor-request",
+            message:`${newDoctor.firstName} ${newDoctor.lastName} has Applied for a Doctor Account`,
+            data:{
+                doctorId: newDoctor._id,
+                name: newDoctor.firstName + " "+ newDoctor.lastName,
+                onClickPath:'/admin/doctors'
+            }
+        })
+        await userModel.findByIdAndUpdate(adminUser._id,{notification})
+        return res.status(201).json({
+            success: true,
+            message: 'Doctor Account Applied successfully',
+        })
+
+    } catch(err){
+        console.error(err)
+        res.status(500).send({success: false, err, message:"Error Applying Doctor"})
+    }
+};
+
+const getUserNotifications = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized',
+      })
+    }
+
+    const user = await userModel
+      .findOne({ user: req.user })
+      .select('notification seenNotification');
+      
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      notification: user.notification ?? [],
+      seenNotification: user.seenNotification ?? [],
+    })
+  } catch (error) {
+    console.error('Get notifications error:', error)
+
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    })
+  }
 }
 
 
-module.exports = {loginController, registerController}
+module.exports = {loginController, registerController, applyDoctorController, getUserNotifications}
