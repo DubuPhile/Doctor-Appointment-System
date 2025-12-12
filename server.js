@@ -34,6 +34,8 @@ app.use('/logout', require('./routes/logout'));
 
 app.use(verifyJWT);
 app.use('/users', require('./routes/api/Users'))
+app.use('/apply-doctor', require('./routes/applyDoctor'));
+app.use('/notifications', require('./routes/getUserNotifications'));
 
 app.all('{*splat}', (req, res) => {
     res.status(404);
