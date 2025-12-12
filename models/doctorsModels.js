@@ -37,15 +37,18 @@ const doctorSchema = new schema(
             type:String,
             required: [true, 'Fxperience is Required!']
         },
-        feesPerCunsaltation: {
-            type:Number,
+        feesPerConsultation: {
+            type:String,
             required: [true, 'Fee is Required!']
+        },
+        status:{
+            type:String,
+            default: "pending"
         },
         timings: {
             type:Object,
             required: [true, 'Work is Required!']
         },
-        refreshToken: String
     },
     {timestamps:true}
 );
