@@ -10,6 +10,7 @@ export const useUserInfo = () => {
 
     const decoded = jwtDecode(auth.accessToken);
     return {
+      userId:decoded?.UserInfo?.userId || decoded?.userId || null,
       user: decoded?.UserInfo?.user || decoded?.user || null,
       email: decoded?.UserInfo?.email || decoded?.email || null,
       roles: decoded?.UserInfo?.roles || decoded?.roles || null,

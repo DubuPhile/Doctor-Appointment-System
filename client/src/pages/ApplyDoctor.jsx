@@ -3,21 +3,37 @@ import { Col, Form, Row, Input, TimePicker, message } from 'antd'
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { showLoading, hideLoading } from "../redux/features/alertSlice"
-import axios from "../api/axios"
 import { useUserInfo } from "../components/useUserInfo"
 import useAuth from "../hooks/useAuth"
-import useAxiosPrivate from '../hooks/useAxiosPrivate'
+import useAxiosPrivate from "../hooks/useAxiosPrivate"
+import { useState } from "react"
 
 const ApplyDoctor = () => {
-  const {userId} = useUserInfo();
-  const {auth} = useAuth();
   const axiosPrivate = useAxiosPrivate();
+  const [form, setForm] = useState([]);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   //handle form
   const handleFinish = async (values) => {
-    console.log(values)
+    try {
+      const { data } = await axiosPrivate.post("/apply-doctor", {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phone: values.phone,
+        email: values.email,
+        address: values.address,
+        website: values.website,
+        specialization: values.specialization,
+        experience: values.experience,
+        feesPerConsultation: values.feesPerConsultation,
+        timings: values.timings.map(time => time.toDate()), 
+      });
+
+      message.success(data.message);
+
+    } catch (error) {
+      console.error("Apply doctor error:", error);
+      alert("Error applying for doctor account.");
+    }
   }
   return (
     <Layout>
@@ -103,11 +119,11 @@ const ApplyDoctor = () => {
             </Col>
             <Col xs={24} md={24} lg={8}>
               <Form.Item 
-                label = "Fees Per Cunsaltation" 
-                name = "feesPerCunsaltation" 
+                label = "Fees Per Consultation" 
+                name = "feesPerConsultation" 
                 required rules={[{required:true}]}
               >
-                <Input type="text" placeholder="Your Fees per Cunsaltation"/>
+                <Input type="number" placeholder="Your Fees per Cunsaltation"/>
               </Form.Item>
             </Col>
             <Col xs={24} md={24} lg={8}>

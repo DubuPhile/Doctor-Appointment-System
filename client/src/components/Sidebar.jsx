@@ -4,7 +4,7 @@ import { useUserInfo } from "./useUserInfo";
 const Sidebar = () => {
     const location = useLocation();
     const {roles} = useUserInfo();
-    const SideBarMenu = roles.includes(2001) ? userMenu : AdminMenu;
+    const SideBarMenu = roles.includes(5150) ? AdminMenu : userMenu ;
     
     return(
         <>
