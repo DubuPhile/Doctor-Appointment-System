@@ -45,6 +45,7 @@ const loginController = async(req, res) => {
             const accessToken = jwt.sign(
                 {
                     "UserInfo":{
+                        "_id": foundUser._id,
                         "user": foundUser.user,
                         "email": foundUser.email,
                         "roles": roles
@@ -76,32 +77,76 @@ const loginController = async(req, res) => {
 
 //apply Doctor Controller
 const applyDoctorController = async( req, res ) => {
-    try{
-        const newDoctor = new doctorsModel({
-            ...req.body,
-            status: 'pending',
-        })
-        await newDoctor.save()
-        const adminUser = await userModel.findOne({"roles.Admin": 5150})
-        const notification = adminUser.notification
-        notification.push({
-            type:"apply-doctor-request",
-            message:`${newDoctor.firstName} ${newDoctor.lastName} has Applied for a Doctor Account`,
-            data:{
-                doctorId: newDoctor._id,
-                name: newDoctor.firstName + " "+ newDoctor.lastName,
-                onClickPath:'/admin/doctors'
-            }
-        })
-        await userModel.findByIdAndUpdate(adminUser._id,{notification})
-        return res.status(201).json({
-            success: true,
-            message: 'Doctor Account Applied successfully',
-        })
+    try {
 
-    } catch(err){
-        console.error(err)
-        res.status(500).send({success: false, err, message:"Error Applying Doctor"})
+        let {
+            firstName,
+            lastName,
+            phone,
+            email,
+            address,
+            website,
+            specialization,
+            experience,
+            feesPerConsultation,
+            timings
+        } = req.body;
+
+        // Type conversions
+        feesPerConsultation = Number(feesPerConsultation);
+        if (isNaN(feesPerConsultation)) {
+            return res.status(400).json({ success: false, message: "feesPerConsultation must be a number" });
+        }
+
+        // Ensure timings is an array of Dates
+        if (!Array.isArray(timings)) {
+            return res.status(400).json({ success: false, message: "timings must be an array" });
+        }
+        timings = timings.map(time => new Date(time));
+        if (timings.some(time => isNaN(time.getTime()))) {
+            return res.status(400).json({ success: false, message: "Invalid date in timings array" });
+        }
+
+        // Create new doctor document
+        const newDoctor = new doctorsModel({
+            firstName,
+            lastName,
+            phone,
+            email,
+            address,
+            website,
+            specialization,
+            experience,
+            feesPerConsultation,
+            timings,
+            status: 'pending'
+        });
+
+        await newDoctor.save();
+
+        // Optional: notify admin
+        const adminUser = await userModel.findOne({ "roles.Admin": 5150 });
+        if (adminUser) {
+            const newNotification = {
+                type: "apply-doctor-request",
+                message: `${newDoctor.firstName} ${newDoctor.lastName} has applied for a Doctor account`,
+                data: {
+                    doctorId: newDoctor._id,
+                    name: newDoctor.firstName + " " + newDoctor.lastName,
+                    onClickPath: "/admin/doctors",
+                },
+                createdAt: new Date(),
+            };
+            await userModel.findByIdAndUpdate(adminUser._id, {
+                $push: { notification: newNotification },
+            });
+        }
+
+        res.status(201).json({ success: true, message: "Doctor application submitted successfully!" });
+
+    } catch (error) {
+        console.error("Error saving doctor:", error);
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
