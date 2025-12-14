@@ -10,6 +10,7 @@ import Logout from './components/logout'
 import PersistLogin from './components/PersistLogin'
 import Unautorized from './pages/Unautorized'
 import ApplyDoctor from './pages/ApplyDoctor'
+import Notification from './pages/Notification'
 
 function App() {
   const {loading} = useSelector(state => state.alerts)
@@ -24,6 +25,7 @@ function App() {
             <Route element = {<PersistLogin />}>
               <Route element = {<RequireAuth allowedRoles={[2001,5150]}/>}>
                 <Route path='/home' element = {<Home />} />
+                <Route path='/notification' element = {<Notification />} />
                 <Route path='/apply-doctor' element = {<ApplyDoctor />} />
                 <Route path = '/logout' element = {<Logout />} />
                 <Route path ="/unautorized" element = {<Unautorized />}/>

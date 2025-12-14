@@ -159,11 +159,7 @@ const getUserNotifications = async (req, res) => {
       })
     }
 
-    const user = await userModel
-      .findOne({ user: req.user })
-      .select('notification seenNotification');
-      
-    
+    const user = await userModel.findOne({ user: req.user }).select('notification seenNotification')
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -171,10 +167,17 @@ const getUserNotifications = async (req, res) => {
       })
     }
 
-    res.status(200).json({
-      success: true,
-      notification: user.notification ?? [],
-      seenNotification: user.seenNotification ?? [],
+    const seenNotification = user.seenNotification
+    const notification = user.notification
+    seenNotification.push(...notification)
+    user.notification = []
+    user.seenNotification = notification
+    const updatedUser = await user.save()
+ 
+    res.status(200).send({
+        success: true,
+        message: 'All Notification mark as read',
+        data: updatedUser,
     })
   } catch (error) {
     console.error('Get notifications error:', error)

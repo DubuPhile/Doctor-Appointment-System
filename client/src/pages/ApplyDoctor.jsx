@@ -1,20 +1,19 @@
 import Layout from "../components/Layout"
 import { Col, Form, Row, Input, TimePicker, message } from 'antd'
-import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { showLoading, hideLoading } from "../redux/features/alertSlice"
-import { useUserInfo } from "../components/useUserInfo"
-import useAuth from "../hooks/useAuth"
+import { useDispatch } from 'react-redux'
+import { showLoading, hideLoading } from '../redux/features/alertSlice'
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
-import { useState } from "react"
 
 const ApplyDoctor = () => {
   const axiosPrivate = useAxiosPrivate();
-  const [form, setForm] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   //handle form
   const handleFinish = async (values) => {
     try {
+      dispatch(showLoading());
       const { data } = await axiosPrivate.post("/apply-doctor", {
         firstName: values.firstName,
         lastName: values.lastName,
@@ -27,12 +26,14 @@ const ApplyDoctor = () => {
         feesPerConsultation: values.feesPerConsultation,
         timings: values.timings.map(time => time.toDate()), 
       });
-
       message.success(data.message);
+      navigate('/home');
+      dispatch(hideLoading());
 
     } catch (error) {
+      dispatch(hideLoading());
       console.error("Apply doctor error:", error);
-      alert("Error applying for doctor account.");
+      message.error("Error applying for doctor account.");
     }
   }
   return (

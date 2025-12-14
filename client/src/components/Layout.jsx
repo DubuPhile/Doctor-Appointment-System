@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import "../styles/Layout.css"
 import Sidebar from "./Sidebar"
 import {useUserInfo} from "./useUserInfo"
@@ -8,7 +8,8 @@ import useNotification from "../hooks/useNotification"
 
 const Layout = ({children}) => {
     const {user} = useUserInfo();
-    const {notification, seenNotification, setNotification, setSeenNotification} = useNotification();
+    const {notification, seenNotification} = useNotification();
+    const navigate = useNavigate();
 
   return (
     <main className='main'>
@@ -25,9 +26,9 @@ const Layout = ({children}) => {
             </div>
             <div className="content">
                 <header className='header'>
-                    <div className="header-content">
-                        <Badge count ={notification.length} showZero>
-                        <i className="fa-solid fa-bell"></i>
+                    <div className="header-content" style={{cursor: 'pointer'}}>
+                        <Badge count ={notification.length} showZero onClick={() => {navigate('/notification')}}>
+                        <i className="fa-solid fa-bell" ></i>
                         </Badge>
                         <Link to ='/profile'>{ user || 'Guest'}</Link>
                     </div>
