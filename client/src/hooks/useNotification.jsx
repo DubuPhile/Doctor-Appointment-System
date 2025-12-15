@@ -1,44 +1,55 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect,useCallback } from "react"
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
 const useNotification = () => {
-   
-    const axiosPrivate = useAxiosPrivate();
-    const [notification, setNotification] = useState([]);
-    const [seenNotification, setSeenNotification] = useState([]);
-    
-    useEffect(() => {
-        let isMounted = true;
-        const controller = new AbortController();
+  const axiosPrivate = useAxiosPrivate();
+  const [notification, setNotification] = useState([]);
+  const [seenNotification, setSeenNotification] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-        const fetchNotifications = async () => {
-        try {
-            const { data } = await axiosPrivate.get("/notifications", {
-                signal: controller.signal,
-            });
+  //Fetch notifications
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const { data } = await axiosPrivate.get("/notifications");
 
-            if (isMounted) {
-            setNotification(data.notification || []);
-            setSeenNotification(data.seenNotification || []);
-            }
-        } catch (err) {
-            console.log("Notification error:", err);
-        }
-        };
+      setNotification(data.notification || []);
+      setSeenNotification(data.seenNotification || []);
+    } catch (err) {
+      console.error("Notification error:", err);
+    }
+  }, [axiosPrivate]);
 
-        fetchNotifications();
+  //Mark all as read
+  const markAllAsRead = useCallback(async () => {
+    try {
+      setLoading(true);
 
-        return () => {
-        isMounted = false;
-        controller.abort();
-        };
-    }, [axiosPrivate]);
+      const { data } = await axiosPrivate.get(
+        "/notifications?markAsRead=true"
+      );
 
-    return {notification , setNotification, seenNotification, setSeenNotification}
-    
-    
-}
+      setNotification([]); // unread cleared
+      setSeenNotification(data.seenNotification || []);
+    } catch (err) {
+      console.error("Mark as read error:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [axiosPrivate]);
 
-export default useNotification
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications, markAllAsRead]);
+
+  return {
+    notification,
+    seenNotification,
+    loading,
+    fetchNotifications,
+    markAllAsRead,
+  };
+};
+
+export default useNotification;
     
    

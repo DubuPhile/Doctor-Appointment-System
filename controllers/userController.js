@@ -159,25 +159,37 @@ const getUserNotifications = async (req, res) => {
       })
     }
 
-    const user = await userModel.findOne({ user: req.user }).select('notification seenNotification')
+    const user = await userModel
+      .findOne({ user: req.user })
+      .select('notification seenNotification');
+      
+    
     if (!user) {
       return res.status(404).json({
         success: false,
         message: 'User not found',
       })
     }
+    const { markAsRead } = req.query;
 
-    const seenNotification = user.seenNotification
-    const notification = user.notification
-    seenNotification.push(...notification)
-    user.notification = []
-    user.seenNotification = notification
-    const updatedUser = await user.save()
- 
-    res.status(200).send({
+    // ✅ If markAsRead=true → move notifications
+    if (markAsRead === "true") {
+      user.seenNotification.push(...user.notification);
+      user.notification = [];
+      await user.save();
+
+      return res.status(200).json({
         success: true,
-        message: 'All Notification mark as read',
-        data: updatedUser,
+        message: "All notifications marked as read",
+        notification: [],
+        seenNotification: user.seenNotification,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      notification: user.notification ?? [],
+      seenNotification: user.seenNotification ?? [],
     })
   } catch (error) {
     console.error('Get notifications error:', error)
@@ -188,6 +200,7 @@ const getUserNotifications = async (req, res) => {
     })
   }
 }
+
 
 
 module.exports = {loginController, registerController, applyDoctorController, getUserNotifications}

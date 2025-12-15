@@ -27,6 +27,7 @@ function App() {
                 <Route path='/home' element = {<Home />} />
                 <Route path='/notification' element = {<Notification />} />
                 <Route path='/apply-doctor' element = {<ApplyDoctor />} />
+                <Route path='/admin/doctors' element = {<Unautorized />} />
                 <Route path = '/logout' element = {<Logout />} />
                 <Route path ="/unautorized" element = {<Unautorized />}/>
               </Route>
