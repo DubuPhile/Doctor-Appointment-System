@@ -149,7 +149,7 @@ const applyDoctorController = async( req, res ) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
-
+// get the Notifications
 const getUserNotifications = async (req, res) => {
   try {
     if (!req.user) {
@@ -172,7 +172,6 @@ const getUserNotifications = async (req, res) => {
     }
     const { markAsRead } = req.query;
 
-    // ✅ If markAsRead=true → move notifications
     if (markAsRead === "true") {
       user.seenNotification.push(...user.notification);
       user.notification = [];

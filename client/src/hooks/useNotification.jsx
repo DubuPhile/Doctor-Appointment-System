@@ -1,11 +1,13 @@
 import { useState, useEffect,useCallback } from "react"
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
+import useAuth from "./useAuth";
 
 const useNotification = () => {
   const axiosPrivate = useAxiosPrivate();
   const [notification, setNotification] = useState([]);
   const [seenNotification, setSeenNotification] = useState([]);
   const [loading, setLoading] = useState(false);
+  const {auth} = useAuth();
 
   //Fetch notifications
   const fetchNotifications = useCallback(async () => {
@@ -37,9 +39,11 @@ const useNotification = () => {
     }
   }, [axiosPrivate]);
 
-  useEffect(() => {
-    fetchNotifications();
-  }, [fetchNotifications, markAllAsRead]);
+    useEffect(() => {
+    if (auth?.accessToken) {
+        fetchNotifications();
+    }
+    }, [fetchNotifications, auth?.accessToken]);
 
   return {
     notification,

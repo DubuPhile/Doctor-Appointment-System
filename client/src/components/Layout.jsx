@@ -4,11 +4,11 @@ import Sidebar from "./Sidebar"
 import {useUserInfo} from "./useUserInfo"
 import LogOut from "./logout"
 import { Badge } from "antd"
-import useNotification from "../hooks/useNotification"
+import useNotif from "../hooks/useNotif"
 
 const Layout = ({children}) => {
     const {user} = useUserInfo();
-    const {notification, seenNotification} = useNotification();
+    const {notification} = useNotif();
     const navigate = useNavigate();
 
   return (
@@ -36,10 +36,9 @@ const Layout = ({children}) => {
                 <div className='body'>{ children }</div>
             </div>
         </div>
-            
-
     </main>
   )
 }
+
 
 export default Layout

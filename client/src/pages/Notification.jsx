@@ -1,10 +1,10 @@
 import Layout from '../components/Layout'
-import { Tabs } from 'antd'
+import { Button, Tabs } from 'antd'
 import { useNavigate } from 'react-router-dom';
-import useNotification from '../hooks/useNotification';
+import useNotif from '../hooks/useNotif';
 
 const Notification = () => {
-  const {notification, markAllAsRead, seenNotification} = useNotification();
+  const {notification, markAllAsRead, seenNotification} = useNotif();
   const navigate = useNavigate();
   const handleDeleteAllRead = () => {}
 
@@ -24,7 +24,7 @@ const Notification = () => {
             <div
               key={index}
               className="card"
-              onClick={navigate(notificationMsg.onClickPath)}
+              onClick={() => navigate(notificationMsg.data.path)}
               style={{cursor:"pointer"}}
             >
               <div className="card-text">
@@ -41,15 +41,15 @@ const Notification = () => {
       children: (
         <>
           <div className="d-flex justify-content-end">
-            <h4 className="p-2" onClick={handleDeleteAllRead}>
+            <Button className="p-2" onClick={handleDeleteAllRead}>
               Delete All Read
-            </h4>
+            </Button>
           </div>
           {seenNotification.map((notificationMsg, index) => (
               <div
                 key={index}
                 className="card"
-                onClick={navigate(notificationMsg.onClickPath)}
+                onClick={() => {navigate(notificationMsg.data.path)}}
                 style={{cursor:"pointer"}}
               >
                 <div className="card-text">
