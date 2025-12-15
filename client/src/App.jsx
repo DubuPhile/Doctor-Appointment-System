@@ -11,11 +11,13 @@ import PersistLogin from './components/PersistLogin'
 import Unautorized from './pages/Unautorized'
 import ApplyDoctor from './pages/ApplyDoctor'
 import Notification from './pages/Notification'
+import { NotificationProvider } from './context/NotificationProvider'
 
 function App() {
   const {loading} = useSelector(state => state.alerts)
   return (
-    <>
+    <>  
+      <NotificationProvider>
         {loading ? (<Spinner/>) : (
           <Routes>
             <Route path="/" element = {<Navigate to ="/login"/>}/>
@@ -24,19 +26,20 @@ function App() {
             
             <Route element = {<PersistLogin />}>
               <Route element = {<RequireAuth allowedRoles={[2001,5150]}/>}>
-                <Route path='/home' element = {<Home />} />
-                <Route path='/notification' element = {<Notification />} />
-                <Route path='/apply-doctor' element = {<ApplyDoctor />} />
-                <Route path='/admin/doctors' element = {<Unautorized />} />
-                <Route path = '/logout' element = {<Logout />} />
-                <Route path ="/unautorized" element = {<Unautorized />}/>
+                
+                  <Route path='/home' element = {<Home />} />
+                  <Route path='/notification' element = {<Notification />} />
+                  <Route path='/apply-doctor' element = {<ApplyDoctor />} />
+                  <Route path='/admin/doctors' element = {<Unautorized />} />
+                  <Route path = '/logout' element = {<Logout />} />
+                  <Route path ="/unautorized" element = {<Unautorized />}/>
+                
               </Route>
             </Route>
-
-            
             <Route path ="*" element = {<Page404/>}/>
           </Routes>
         )}
+      </NotificationProvider>
     </>
   )
 }
