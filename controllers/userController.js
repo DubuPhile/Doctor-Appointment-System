@@ -133,7 +133,7 @@ const applyDoctorController = async( req, res ) => {
                 data: {
                     doctorId: newDoctor._id,
                     name: newDoctor.firstName + " " + newDoctor.lastName,
-                    onClickPath: "/admin/doctors",
+                    path: "/admin/doctors",
                 },
                 createdAt: new Date(),
             };
