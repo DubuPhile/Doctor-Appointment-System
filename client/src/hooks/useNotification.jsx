@@ -1,6 +1,7 @@
 import { useState, useEffect,useCallback } from "react"
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import useAuth from "./useAuth";
+import { message } from "antd";
 
 const useNotification = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -32,6 +33,7 @@ const useNotification = () => {
 
       setNotification([]); // unread cleared
       setSeenNotification(data.seenNotification || []);
+      message.success('All message mark as read!')
     } catch (err) {
       console.error("Mark as read error:", err);
     } finally {
@@ -49,6 +51,7 @@ const useNotification = () => {
 
       setNotification([]); // unread cleared
       setSeenNotification([]);
+      message.success('All Notifications has been Deleted!')
     } catch (err) {
       console.error("Mark as read error:", err);
     } finally {
