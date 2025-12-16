@@ -4,10 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import useNotif from '../hooks/useNotif';
 
 const Notification = () => {
-  const {notification, markAllAsRead, seenNotification} = useNotif();
+  const {notification, markAllAsRead, seenNotification, DeleteAllNotification} = useNotif();
   const navigate = useNavigate();
-  const handleDeleteAllRead = () => {}
-
+  
   const tabItems = [
     {
       key: "0",
@@ -15,9 +14,9 @@ const Notification = () => {
       children: (
         <>
           <div className="d-flex justify-content-end">
-            <h4 className="p-2" onClick={markAllAsRead} style={{cursor: "pointer"}}>
+            <Button className="p-2" onClick={markAllAsRead} style={{cursor: "pointer"}}>
               Mark All Read
-            </h4>
+            </Button>
           </div>
 
           {notification.map((notificationMsg, index) => (
@@ -41,7 +40,7 @@ const Notification = () => {
       children: (
         <>
           <div className="d-flex justify-content-end">
-            <Button className="p-2" onClick={handleDeleteAllRead}>
+            <Button className="p-2" onClick={DeleteAllNotification}>
               Delete All Read
             </Button>
           </div>

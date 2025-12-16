@@ -160,16 +160,15 @@ const getUserNotifications = async (req, res) => {
     }
 
     const user = await userModel
-      .findOne({ user: req.user })
-      .select('notification seenNotification');
+      .findOne({ user: req.user });
       
-    
     if (!user) {
       return res.status(404).json({
         success: false,
         message: 'User not found',
       })
     }
+    //to mark all Notifications as Read
     const { markAsRead } = req.query;
 
     if (markAsRead === "true") {
@@ -182,6 +181,23 @@ const getUserNotifications = async (req, res) => {
         message: "All notifications marked as read",
         notification: [],
         seenNotification: user.seenNotification,
+      });
+    }
+    //to delete all Read notification
+    const { deleteRead } = req.query;
+
+    if( deleteRead === 'true') {
+        user.notification = [];
+        user.seenNotification = [];
+        await user.save();
+        user.password = undefined;
+
+        return res.status(200).json({
+        success: true,
+        message: "Notifications Deleted SuccessFully",
+        notification: [],
+        seenNotification: [],
+        password: undefined,
       });
     }
 

@@ -38,6 +38,23 @@ const useNotification = () => {
       setLoading(false);
     }
   }, [axiosPrivate]);
+  //Delete All Notifications
+  const DeleteAllNotification = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const { data } = await axiosPrivate.get(
+        "/notifications?deleteRead=true"
+      );
+
+      setNotification([]); // unread cleared
+      setSeenNotification([]);
+    } catch (err) {
+      console.error("Mark as read error:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [axiosPrivate]);
 
     useEffect(() => {
     if (auth?.accessToken) {
@@ -51,6 +68,7 @@ const useNotification = () => {
     loading,
     fetchNotifications,
     markAllAsRead,
+    DeleteAllNotification,
   };
 };
 
