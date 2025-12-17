@@ -1,7 +1,5 @@
-import { useEffect } from 'react';
 import useLogout from '../hooks/useLogout'
 import { useNavigate } from 'react-router-dom';
-import { message } from 'antd';
 
 const LogOut = () => {
     const navigate = useNavigate();
