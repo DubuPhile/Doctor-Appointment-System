@@ -19,7 +19,8 @@ const userSchema = new schema({
     },
     password:{
         type: String,
-        required: [true, 'Password is required']
+        required: [true, 'Password is required'],
+        select: false,
     },
     notification: {
         type: Array,
@@ -29,7 +30,10 @@ const userSchema = new schema({
         type: Array,
         default: [],
     },
-    refreshToken: String
+    refreshToken: {
+        type:String,
+        select: false,
+    }
 })
 
 module.exports = mongoose.model('User', userSchema);

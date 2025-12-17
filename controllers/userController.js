@@ -35,7 +35,7 @@ const loginController = async(req, res) => {
                 { user: user },
                 { email: user }
             ]
-         }).exec();
+         }).select("+password +refreshToken").exec();
         if(!foundUser){
             return res.sendStatus(401)
         }
