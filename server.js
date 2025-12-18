@@ -36,8 +36,7 @@ app.use(verifyJWT);
 app.use('/users', require('./routes/api/Users'))
 app.use('/apply-doctor', require('./routes/applyDoctor'));
 app.use('/notifications', require('./routes/getUserNotifications'));
-app.use('/getAllDoctors', require('./routes/adminRoutes/getAllDoctors'));
-app.use('/getAllUsers', require('./routes/adminRoutes/getAllUsers'));
+app.use('/admin', require('./routes/AdminRoutes'));
 
 app.all('{*splat}', (req, res) => {
     res.status(404);

@@ -8,9 +8,11 @@ import Spinner from './components/Spinner'
 import RequireAuth from './components/RequiredAuth'
 import Logout from './components/logout'
 import PersistLogin from './components/PersistLogin'
-import Unautorized from './pages/Unautorized'
+import Unauthorized from './pages/Unauthorized'
 import ApplyDoctor from './pages/ApplyDoctor'
 import Notification from './pages/Notification'
+import Users from './pages/Admin/Users'
+import Doctors from './pages/Admin/Doctors'
 import { NotificationProvider } from './context/NotificationProvider'
 
 function App() {
@@ -25,15 +27,22 @@ function App() {
             <Route path='/register' element = {<Register />} />
             
             <Route element = {<PersistLogin />}>
-              <Route element = {<RequireAuth allowedRoles={[2001,5150]}/>}>
+              <Route element = {<RequireAuth allowedRoles={[2001,5150]}/>}>         
+                <Route path='/home' element = {<Home />} />
+                <Route path='/notification' element = {<Notification />} />
+                <Route path = '/logout' element = {<Logout />} />
+                <Route path ="/unauthorized" element = {<Unauthorized />}/>
+              </Route>
+              {/*User Routes*/}
+              <Route element = {<RequireAuth allowedRoles={[2001]}/>}>
+                <Route path='/apply-doctor' element = {<ApplyDoctor />} />
                 
-                  <Route path='/home' element = {<Home />} />
-                  <Route path='/notification' element = {<Notification />} />
-                  <Route path='/apply-doctor' element = {<ApplyDoctor />} />
-                  <Route path='/admin/doctors' element = {<Unautorized />} />
-                  <Route path = '/logout' element = {<Logout />} />
-                  <Route path ="/unautorized" element = {<Unautorized />}/>
-                
+              </Route>
+              {/*Admin Routes*/}
+              <Route element = {<RequireAuth allowedRoles={[5150]}/>}>
+                <Route path='/admin/doctors' element = {<Doctors />} />
+                <Route path='/admin/users' element = {<Users />} />
+
               </Route>
             </Route>
             <Route path ="*" element = {<Page404/>}/>
