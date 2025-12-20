@@ -4,7 +4,10 @@ const schema = mongoose.Schema;
 const doctorSchema = new schema(
     {
         userId: {
-            type:String
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users",
+            required: true,
+            unique: true, 
         },
         firstName: {
             type:String,
@@ -52,5 +55,6 @@ const doctorSchema = new schema(
     },
     {timestamps:true}
 );
+doctorSchema.index({ userId: 1 }, { unique: true });
 
 module.exports = mongoose.model('Doctor', doctorSchema);
