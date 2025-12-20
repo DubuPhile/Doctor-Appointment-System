@@ -17,6 +17,10 @@ const userSchema = new schema({
         },
         Admin: Number
     },
+    isDoctor:{
+        type: Boolean,
+        default: false
+    },
     password:{
         type: String,
         required: [true, 'Password is required'],

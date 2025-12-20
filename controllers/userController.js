@@ -91,7 +91,16 @@ const applyDoctorController = async( req, res ) => {
             feesPerConsultation,
             timings
         } = req.body;
+        const existingDoctor = await doctorsModel.findOne({
+            userId: req.user.id, // from auth middleware
+        });
 
+        if (existingDoctor) {
+            return res.status(409).json({
+                success: false,
+                message: "You have already applied for a doctor account",
+            });
+        }
         // Type conversions
         feesPerConsultation = Number(feesPerConsultation);
         if (isNaN(feesPerConsultation)) {
@@ -109,6 +118,7 @@ const applyDoctorController = async( req, res ) => {
 
         // Create new doctor document
         const newDoctor = new doctorsModel({
+            userId: req.id,
             firstName,
             lastName,
             phone,
@@ -145,8 +155,17 @@ const applyDoctorController = async( req, res ) => {
         res.status(201).json({ success: true, message: "Doctor application submitted successfully!" });
 
     } catch (error) {
+        
         console.error("Error saving doctor:", error);
+        if (error.code === 11000) {
+            return res.status(409).json({
+                success: false,
+                message: "Doctor application already exists",
+            });
+        }
+        else{
         res.status(500).json({ success: false, message: error.message });
+        }
     }
 };
 // get the Notifications

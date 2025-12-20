@@ -43,10 +43,10 @@ const Users = () => {
       dataIndex: 'email',
     },
     {
-      title: 'Roles',
-      dataIndex: 'roles',
+      title: 'Doctor',
+      dataIndex: 'isDoctor',
       render: ( text , record ) => (
-        <span>{ Object.values(record.roles || {}).includes(5150) ? 'Admin' : 'User' }</span>
+        <span>{record.isDoctor ? 'Yes' : 'No' }</span>
       )
     },
     {
