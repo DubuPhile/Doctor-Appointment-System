@@ -32,8 +32,12 @@ const ApplyDoctor = () => {
 
     } catch (error) {
       dispatch(hideLoading());
-      console.error("Apply doctor error:", error);
-      message.error("Error applying for doctor account.");
+      if(error.response?.status === 409){
+        message.error('You have already applied for a doctor account')
+      }
+      else{
+        message.error("Error applying for doctor account.");
+      }
     }
   }
   return (
