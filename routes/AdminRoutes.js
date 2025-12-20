@@ -8,4 +8,6 @@ router.get('/getAllUsers', adminController.getAllUsersController);
 // get all doctors
 router.get('/getAllDoctors', adminController.getAllDoctorsController);
 
+router.post('/changeAccountStatus', adminController.changeAccountStatusController)
+
 module.exports = router
