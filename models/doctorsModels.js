@@ -55,6 +55,5 @@ const doctorSchema = new schema(
     },
     {timestamps:true}
 );
-doctorSchema.index({ userId: 1 }, { unique: true });
 
 module.exports = mongoose.model('Doctor', doctorSchema);

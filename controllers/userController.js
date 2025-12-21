@@ -78,7 +78,7 @@ const loginController = async(req, res) => {
 //apply Doctor Controller
 const applyDoctorController = async( req, res ) => {
     try {
-
+        console.log("req.user:", req.user);
         let {
             firstName,
             lastName,
@@ -118,7 +118,7 @@ const applyDoctorController = async( req, res ) => {
 
         // Create new doctor document
         const newDoctor = new doctorsModel({
-            userId: req.id,
+            userId: req.user.id,
             firstName,
             lastName,
             phone,
