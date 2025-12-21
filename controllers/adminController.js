@@ -47,18 +47,21 @@ const getAllDoctorsController = async( req, res ) => {
 const changeAccountStatusController = async( req, res ) => {
     try{
         const {doctorsId, status} = req.body
-        const doctor = await doctorsModel.findByIdAndUpdate(doctorsId, {status})
-        const user = await usersModel.findOne({_id: doctor.userId})
-        console.log("User:", user); // <-- backend log
-        console.log("user.userId:", doctor?.userId);
-        const notification = user.notification
-        notification.push({
-            type: 'doctors-account-requested-updated',
-            message: `Your Doctors Account Request has ${status}`,
-            path: '/notifications'
-        })
-        user.isDoctor === 'approved' ? true : false
-        await user.save()
+        const doctor = await doctorsModel.findByIdAndUpdate(doctorsId, {status})  
+        await usersModel.findByIdAndUpdate(
+            doctor.userId,
+            {
+                $set: { isDoctor: true },
+                $push: {
+                notification: {
+                    type: "doctors-account-requested-updated",
+                    message: "Your Doctors Account Request has approved",
+                    path: "/notifications"
+                }
+                }
+            },
+            { new: true }
+        );
     } catch(err){
         console.log(err)
         res.status(500).send({
