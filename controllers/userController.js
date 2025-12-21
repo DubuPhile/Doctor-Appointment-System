@@ -47,7 +47,7 @@ const loginController = async(req, res) => {
                     "UserInfo":{
                         "_id": foundUser._id,
                         "user": foundUser.user,
-                        "email": foundUser.email,
+                        "isDoctor": foundUser.isDoctor,
                         "roles": roles
                     }
                 },
@@ -171,7 +171,7 @@ const applyDoctorController = async( req, res ) => {
 // get the Notifications
 const getUserNotifications = async (req, res) => {
   try {
-    if (!req.user) {
+    if (!req.user.user) {
       return res.status(401).json({
         success: false,
         message: 'Unauthorized',
@@ -179,7 +179,7 @@ const getUserNotifications = async (req, res) => {
     }
 
     const user = await userModel
-      .findOne({ user: req.user });
+      .findOne({ user: req.user.user });
       
     if (!user) {
       return res.status(404).json({
