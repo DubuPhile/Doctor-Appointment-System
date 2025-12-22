@@ -46,7 +46,7 @@ const Users = () => {
       title: 'Doctor',
       dataIndex: 'isDoctor',
       render: ( text , record ) => (
-        <span>{record.isDoctor ? 'Yes' : 'No' }</span>
+        <span>{record.isDoctor === true ? 'Yes' : 'No' }</span>
       )
     },
     {

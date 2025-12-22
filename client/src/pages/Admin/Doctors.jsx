@@ -40,7 +40,7 @@ const Doctors = () => {
   const handleAccountStatus = async( record, status ) => {
     setIsLoading(true)
     try{
-      const res = await axiosPrivate.post('/admin/changeAccountStatus', {doctorsId: record._id, status: status})
+      const res = await axiosPrivate.post('/admin/changeAccountStatus', {doctorsId: record._id, userId: record.userId, status: status})
   
       if(res.data.success){
         message.success(res.data.message);
