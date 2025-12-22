@@ -3,8 +3,26 @@ import { Link, useLocation } from "react-router-dom"
 import { useUserInfo } from "./useUserInfo";
 const Sidebar = () => {
     const location = useLocation();
-    const {roles} = useUserInfo();
-    const SideBarMenu = roles.includes(5150) ? AdminMenu : userMenu ;
+    const {userId , isDoctor, roles} = useUserInfo();
+    //============Doctors Menu ================
+    const doctorsMenu = [
+        {
+            name:"Home",
+            path:"/home",
+            icon:"fa-solid fa-house"
+        },
+        {
+            name:"Appointments",
+            path:"/appointments",
+            icon:"fa-solid fa-list"
+        },
+        {
+            name:"Profile",
+            path:`/doctor/profile/${userId}`,
+            icon:"fa-solid fa-user"
+        },
+    ]
+    const SideBarMenu = roles.includes(5150) ? AdminMenu : isDoctor ? doctorsMenu : userMenu;
     
     return(
         <>
