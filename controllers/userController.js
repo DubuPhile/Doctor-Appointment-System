@@ -78,7 +78,6 @@ const loginController = async(req, res) => {
 //apply Doctor Controller
 const applyDoctorController = async( req, res ) => {
     try {
-        console.log("req.user:", req.user);
         let {
             firstName,
             lastName,
