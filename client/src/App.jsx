@@ -14,6 +14,7 @@ import Notification from './pages/Notification'
 import Users from './pages/Admin/Users'
 import Doctors from './pages/Admin/Doctors'
 import { NotificationProvider } from './context/NotificationProvider'
+import Profile from './pages/doctor/Profile'
 
 function App() {
   const {loading} = useSelector(state => state.alerts)
@@ -36,6 +37,7 @@ function App() {
               {/*User Routes*/}
               <Route element = {<RequireAuth allowedRoles={[2001]}/>}>
                 <Route path='/apply-doctor' element = {<ApplyDoctor />} />
+                <Route path='/doctor/profile/:id' element = {<Profile />} />
                 
               </Route>
               {/*Admin Routes*/}
