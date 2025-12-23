@@ -234,6 +234,28 @@ const getUserNotifications = async (req, res) => {
   }
 }
 
+const getApprovedDoctorController = async( req, res ) => {
+    try{
+        const doctors = await doctorsModel.find({status: "approved"})
+        res.status(201).send({
+            success: true,
+            message: "Fetch Doctors data Successfully",
+            data: doctors,
+        })
+    }catch(err){
+        console.log(err),
+        res.status(500).send({
+            success:false,
+            err,
+            message: "Error While fetching Approved Doctors"
+        })
+    }
+}
 
-
-module.exports = {loginController, registerController, applyDoctorController, getUserNotifications}
+module.exports = {
+    loginController, 
+    registerController, 
+    applyDoctorController, 
+    getUserNotifications, 
+    getApprovedDoctorController,
+}
