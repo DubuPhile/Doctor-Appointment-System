@@ -15,6 +15,7 @@ import Users from './pages/Admin/Users'
 import Doctors from './pages/Admin/Doctors'
 import { NotificationProvider } from './context/NotificationProvider'
 import Profile from './pages/doctor/Profile'
+import BookingPage from './pages/BookingPage'
 
 function App() {
   const {loading} = useSelector(state => state.alerts)
@@ -32,6 +33,7 @@ function App() {
                 <Route path='/home' element = {<Home />} />
                 <Route path='/notification' element = {<Notification />} />
                 <Route path = '/logout' element = {<Logout />} />
+                <Route path = '/book-appointment/:doctorId' element = {<BookingPage />} />
                 <Route path ="/unauthorized" element = {<Unauthorized />}/>
               </Route>
               {/*User Routes*/}
