@@ -5,10 +5,6 @@ import { useNavigate } from "react-router-dom";
 const DoctorList = ({ doctor }) => {
     const navigate = useNavigate();
 
-    const CapitalizedFirstLetter = useCallback((string) => {
-        if (!string) return "";
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    })
   return (
     <>
         <div 
@@ -17,7 +13,7 @@ const DoctorList = ({ doctor }) => {
             style={{cursor: 'pointer'}}
         >
             <header className="card-header text-center">
-                Dr. { CapitalizedFirstLetter(doctor.firstName) + " " + CapitalizedFirstLetter(doctor.lastName) } 
+                Dr. { doctor.firstName + " " + doctor.lastName } 
             </header>
             <div className="card-body">
                 <p>

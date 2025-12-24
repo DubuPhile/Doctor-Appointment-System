@@ -11,10 +11,12 @@ const doctorSchema = new schema(
         },
         firstName: {
             type:String,
+            set: v => v.charAt(0).toUpperCase() + v.slice(1).toLowerCase(),
             required: [true, 'firstname is Required!']
         },
         lastName: {
             type:String,
+            set: v => v.charAt(0).toUpperCase() + v.slice(1).toLowerCase(),
             required: [true, 'lastname is Required!']
         },
         phone: {
