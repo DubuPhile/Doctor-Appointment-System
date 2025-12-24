@@ -39,4 +39,24 @@ const updateProfileController = async( req, res ) => {
     }
 }
 
-module.exports = { getDoctorInfoController, updateProfileController }
+const getDoctorIdController = async( req, res ) => {
+    const {doctorId} = req.query
+    try{
+        const doctor = await doctorsModel.findOne({userId: doctorId});
+        res.status(200).send({
+            success: true,
+            message: "Single fetch Doctor",
+            data: doctor,
+        });
+
+    } catch(err){
+        console.log(err)
+        res.status(500).send({
+            success: false,
+            err,
+            message: "Somethings Wrong getting Doctors ID"
+        })
+    }
+}
+
+module.exports = { getDoctorInfoController, updateProfileController, getDoctorIdController }
