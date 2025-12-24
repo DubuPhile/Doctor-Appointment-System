@@ -50,7 +50,7 @@ const Register = () => {
       <section>
       <div className="regform-container">
         <Form layout="vertical" onFinish={onFinishHandler}>
-          <h3>Register Form</h3>
+          <h3 className='register-h3'>Register Form</h3>
           <div>
             <Form.Item 
               label ={<span className="custom-color">Username</span>} 

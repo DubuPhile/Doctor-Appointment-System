@@ -70,7 +70,7 @@ const Login = () => {
       <section>
       <div className="logform-container">
         <Form layout="vertical" onFinish={onFinishHandler}>
-          <h2>Sign in</h2>
+          <h2 className='login-h2'>Sign in</h2>
           <Form.Item label ={<span className="custom-color">Username</span>} name="user">
             <Input type= "text" 
             required 
