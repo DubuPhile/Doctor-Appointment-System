@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const cookieOptions = require('./cookieOption');
 const doctorsModel = require ('../models/doctorsModels');
 const appointmentModel = require('../models/appointmentModel');
+const moment = require('moment');
 
 //Register Controller
 const registerController = async(req, res) => {
@@ -255,6 +256,8 @@ const getApprovedDoctorController = async( req, res ) => {
 
 const bookAppointmentController = async( req, res ) => {
     try{
+        req.body.date = moment(req.body.date, 'DD-MM-YYYY').toISOString();
+        req.body.time = moment(req.body.time, 'HH:mm').toISOString();
         req.body.status = "pending"
         console.log(req.body.doctorId)
         const newAppointment = new appointmentModel(req.body)
