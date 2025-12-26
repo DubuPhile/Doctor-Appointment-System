@@ -48,6 +48,10 @@ const BookingPage = () => {
 
     const handleBooking = async() => {
       try{
+        setIsAvailable(true);
+        if(!date && !time) {
+          return alert ('Date & Time Required');
+        }
         dispatch(showLoading())
         const res = await axiosPrivate.post('/user/book-appointment', 
           {
@@ -68,6 +72,22 @@ const BookingPage = () => {
         console.log(err)
       }
     }
+    const handleAvailability = async() => {
+      try{
+        dispatch(showLoading())
+        const res = await axiosPrivate.post('/user/book-availability', { doctorId, date, time })
+        if(res.data.success){
+          setIsAvailable(true)
+          message.success(res.data.message)
+        } else {
+          message.error(res.data.message)
+        }
+      } catch(err){
+        console.log(err)
+      } finally {
+        dispatch(hideLoading())
+      }
+    }
     
   return (
     <Layout>
@@ -82,7 +102,10 @@ const BookingPage = () => {
                 <DatePicker 
                   className="m-2"
                   format={"DD-MM-YYYY"} 
-                  onChange={(value) => setDate(dayjs(value).format("DD-MM-YYYY"))}
+                  onChange={(value) =>{
+                    setIsAvailable(false) 
+                    setDate(dayjs(value).format("DD-MM-YYYY"))
+                  }}
                 />
                 <TimePicker 
                   className="m-2"
@@ -92,15 +115,18 @@ const BookingPage = () => {
                 <div className="d-flex flex-row justify-content-between">
                 <button 
                   className="btn btn-primary mt-2"
+                  onClick={handleAvailability}
                 >
                   Check Availability
                 </button>
+                {!isAvailable && (
                 <button 
                 className="btn btn-success mt-2"
                 onClick={handleBooking}
                 >
                   Book Now!
                 </button>
+                )}
                 </div>
               </div>
             </div>
