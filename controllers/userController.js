@@ -253,7 +253,7 @@ const getApprovedDoctorController = async( req, res ) => {
         })
     }
 }
-
+//fetch book appointment
 const bookAppointmentController = async( req, res ) => {
     try{
         req.body.date = moment(req.body.date, 'DD-MM-YYYY').toISOString();
@@ -282,6 +282,80 @@ const bookAppointmentController = async( req, res ) => {
         })
     }
 }
+//fetch Availability
+const bookAvailabilityController = async( req, res ) => {
+    try{
+        const { date, time, doctorId } = req.body;
+        const appointmentMoment = moment(time, "HH:mm");
+        const appointmentMinutes =
+            appointmentMoment.hours() * 60 + appointmentMoment.minutes();
+
+        // Doctor start & end times
+        const doctor = await doctorsModel.findOne({userId: doctorId});
+        if (!doctor) {
+            return res.status(404).send({
+            success: false,
+            message: "Doctor not found"
+            });
+        }
+        const doctorStart = moment(doctor.timings[0]);
+        const doctorEnd = moment(doctor.timings[1]);
+
+        const startMinutes =
+            doctorStart.hours() * 60 + doctorStart.minutes();
+        const endMinutes =
+            doctorEnd.hours() * 60 + doctorEnd.minutes();
+
+        // Outside doctor working hours
+        if (
+            appointmentMinutes < startMinutes ||
+            appointmentMinutes > endMinutes
+        ) {
+            return res.status(200).send({
+            success: true,
+            message: "Doctor is not available at this time"
+            });
+        }
+        const appointmentDateTime = moment(
+            `${date} ${time}`,
+            "DD-MM-YYYY HH:mm"
+        );
+        const fromTime = appointmentDateTime
+            .clone()
+            .subtract(1, "hour")
+            .toISOString();
+
+        const toTime = appointmentDateTime
+            .clone()
+            .add(1, "hour")
+            .toISOString();
+        const appointments = await appointmentModel.find({
+            doctorId, 
+            date, 
+            time: {
+                $gte:fromTime, $lte: toTime
+            }
+        })
+        if(appointments.length > 0){
+            return res.status(200).send({
+                message: 'Appointments not available at this time',
+                success: true
+            })
+        } else {
+            return res.status(200).send({
+                message: 'Appointments Available',
+                success: true
+            })
+        }
+    }catch(err){
+        console.log(err)
+        res.status(500).send({
+            success: false,
+            err,
+            message: "Error Fetching Availability"
+        })
+    }
+}
 module.exports = {
     loginController, 
     registerController, 
@@ -289,4 +363,5 @@ module.exports = {
     getUserNotifications, 
     getApprovedDoctorController,
     bookAppointmentController,
+    bookAvailabilityController,
 }
