@@ -19,7 +19,7 @@ const BookingPage = () => {
   const [doctors, setDoctors] = useState([]);
   const [date, setDate] = useState();
   const [time, setTime] = useState();
-  const [isAvailable, setIsAvailable] = useState();
+  const [isAvailable, setIsAvailable] = useState(false);
 
   useEffect(() => {
     let isMounted = true
@@ -46,9 +46,12 @@ const BookingPage = () => {
     }
     },[])
 
-    const handleBooking = async() => {
+    const handleBooking = async(e) => {
+      e.preventDefault();
+      if (!isAvailable) {
+        return message.warning("Please check availability first");
+      }
       try{
-        setIsAvailable(true);
         if(!date && !time) {
           return alert ('Date & Time Required');
         }
@@ -69,13 +72,25 @@ const BookingPage = () => {
         }
       } catch(err){
         dispatch(hideLoading())
+        if(err.response?.status === 409){
+          message.error("Time slot already booked")
+        }
         console.log(err)
       }
     }
-    const handleAvailability = async() => {
-      try{
-        dispatch(showLoading())
+    const handleAvailability = async(e) => {
+      e.preventDefault();
+      if (!date || !time) {
+        return message.warning("Please select date and time");
+      }
+      try {
         const res = await axiosPrivate.post('/user/book-availability', { doctorId, date, time })
+        
+        if (res.data.message === "Time slot already booked") {
+          setIsAvailable(false);
+          message.warning(res.data.message);
+          return;
+        }
         if(res.data.success){
           setIsAvailable(true)
           message.success(res.data.message)
@@ -84,9 +99,7 @@ const BookingPage = () => {
         }
       } catch(err){
         console.log(err)
-      } finally {
-        dispatch(hideLoading())
-      }
+      } 
     }
     
   return (
@@ -102,10 +115,7 @@ const BookingPage = () => {
                 <DatePicker 
                   className="m-2"
                   format={"DD-MM-YYYY"} 
-                  onChange={(value) =>{
-                    setIsAvailable(false) 
-                    setDate(dayjs(value).format("DD-MM-YYYY"))
-                  }}
+                  onChange={(value) => setDate(dayjs(value).format("DD-MM-YYYY"))}
                 />
                 <TimePicker 
                   className="m-2"
@@ -119,14 +129,13 @@ const BookingPage = () => {
                 >
                   Check Availability
                 </button>
-                {!isAvailable && (
                 <button 
                 className="btn btn-success mt-2"
                 onClick={handleBooking}
+                disabled = {!isAvailable}
                 >
                   Book Now!
                 </button>
-                )}
                 </div>
               </div>
             </div>
