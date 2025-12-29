@@ -344,7 +344,6 @@ const bookAvailabilityController = async( req, res ) => {
             message: appointments ? 'Time slot already booked'
                                         : "Appointments Available"
             })
-
     }catch(err){
         console.log(err)
         res.status(500).send({
@@ -354,6 +353,26 @@ const bookAvailabilityController = async( req, res ) => {
         })
     }
 }
+
+const userAppointmentsController = async( req, res ) => {
+    try{
+        const {userId} = req.query
+        const appointments = await appointmentModel.find({userId: userId}).populate('doctorInfo').populate('userInfo');
+        console.log(appointments.time)
+        res.status(200).send({
+            success: true,
+            message: "Users Appointments Fetch Successfully",
+            data: appointments,
+        });
+    } catch(err){
+        console.log(err)
+        res.status(500).send({
+            success:false,
+            err,
+            message:"Error in User Appointment"
+        })
+    }
+};
 module.exports = {
     loginController, 
     registerController, 
@@ -362,4 +381,5 @@ module.exports = {
     getApprovedDoctorController,
     bookAppointmentController,
     bookAvailabilityController,
+    userAppointmentsController,
 }
