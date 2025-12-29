@@ -11,11 +11,13 @@ const appointmentSchema = new schema({
         required: true,
     },
     doctorInfo: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Doctor",
         required: true,
     },
     userInfo: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
     date: {
