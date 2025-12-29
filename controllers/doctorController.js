@@ -1,3 +1,4 @@
+const appointmentModel = require('../models/appointmentModel');
 const doctorsModel = require('../models/doctorsModels')
 
 //get doctor Info
@@ -58,5 +59,29 @@ const getDoctorIdController = async( req, res ) => {
         })
     }
 }
+const getDoctorAppointmentsController = async( req, res ) => {
+    try{
+        const doctor = await doctorsModel.findOne({userId: req.query.userId})
+        const appointments = await appointmentModel.find({doctorId: doctor.userId}).populate('doctorInfo').populate('userInfo');
+        console.log(doctor.userId)
+        res.status(200).send({
+            success: true,
+            message: "Doctor Appointment Fetch Successfully",
+            data: appointments,
+        })
+    } catch(err){
+        console.log(err)
+        res.status(500).send({
+            success: false,
+            err,
+            message: "Doctor Appointments Fetch Error"
+        })
+    }
+}
 
-module.exports = { getDoctorInfoController, updateProfileController, getDoctorIdController }
+module.exports = { 
+    getDoctorInfoController, 
+    updateProfileController, 
+    getDoctorIdController,
+    getDoctorAppointmentsController, 
+}
