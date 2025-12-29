@@ -19,7 +19,7 @@ const appointmentSchema = new schema({
         required: true,
     },
     date: {
-        type: String,
+        type: Date,
         required: true,
     },
     status: {
@@ -28,7 +28,7 @@ const appointmentSchema = new schema({
         default: "pending"
     },
     time: {
-        type: String,
+        type: Date,
         required: true,
     },
 },{timestamps:true})
