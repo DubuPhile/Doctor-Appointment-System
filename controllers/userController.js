@@ -322,31 +322,29 @@ const bookAvailabilityController = async( req, res ) => {
         );
         const fromTime = appointmentDateTime
             .clone()
-            .subtract(1, "hour")
+            .subtract(59, "minute")
             .toISOString();
 
         const toTime = appointmentDateTime
             .clone()
             .add(1, "hour")
             .toISOString();
-        const appointments = await appointmentModel.find({
+        console.log(fromTime)
+        console.log(toTime)
+        const appointments = await appointmentModel.exists({
             doctorId, 
-            date, 
+            date: moment(date, "DD-MM-YYYY").toISOString(), 
             time: {
                 $gte:fromTime, $lte: toTime
             }
         })
-        if(appointments.length > 0){
-            return res.status(200).send({
-                message: 'Appointments not available at this time',
-                success: true
+        console.log(appointments)
+        return res.status(200).send({
+            success: true,
+            message: appointments ? 'Time slot already booked'
+                                        : "Appointments Available"
             })
-        } else {
-            return res.status(200).send({
-                message: 'Appointments Available',
-                success: true
-            })
-        }
+
     }catch(err){
         console.log(err)
         res.status(500).send({
