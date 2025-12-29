@@ -256,8 +256,26 @@ const getApprovedDoctorController = async( req, res ) => {
 //fetch book appointment
 const bookAppointmentController = async( req, res ) => {
     try{
-        req.body.date = moment(req.body.date, 'DD-MM-YYYY').toISOString();
-        req.body.time = moment(req.body.time, 'HH:mm').toISOString();
+        // Convert date & time to ISO for comparison/storage
+        const appointmentDate = moment(req.body.date, 'DD-MM-YYYY').toISOString();
+        const appointmentTime = moment(req.body.time, 'HH:mm').toISOString();
+
+        // Check if appointment already exists
+        const existing = await appointmentModel.exists({
+            doctorId: req.body.doctorId,
+            date: appointmentDate,
+            time: appointmentTime
+        });
+
+        if (existing) {
+            return res.status(409).send({
+                success: false,
+                message: 'Time slot already booked'
+            });
+        }
+        // Create new appointment
+        req.body.date = appointmentDate;
+        req.body.time = appointmentTime;
         req.body.status = "pending"
         console.log(req.body.doctorId)
         const newAppointment = new appointmentModel(req.body)
