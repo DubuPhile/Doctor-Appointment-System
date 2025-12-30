@@ -1,15 +1,19 @@
 import Layout from "../components/Layout"
 import { useState, useEffect } from "react"
+import { useDispatch } from 'react-redux';
+import { showLoading,hideLoading } from '../redux/features/alertSlice';
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import { useUserInfo } from "../components/useUserInfo"
 import dayjs from 'dayjs'
 import { Table } from "antd"
+import { message } from "antd";
 
 const Appointments = () => {
     const {userId, isDoctor} = useUserInfo();
     const [Appointments, setAppointments] = useState([]);
     const axiosPrivate = useAxiosPrivate();
-    const getAppointments = async() => {
+    const dispatch = useDispatch();
+    const getAppointments = async() => {      
         try{
             const res = await axiosPrivate.get(
                 !isDoctor 
@@ -27,8 +31,21 @@ const Appointments = () => {
         getAppointments();
     },[])
 
-    const handleStatus = () => {
-
+    const handleStatus = async(record , status) => {
+        try{
+            dispatch(showLoading())
+            const res = await axiosPrivate.post ('/doctor/update-status', {appointmentsId: record._id, status});
+            if(res.data.success){
+                message.success(res.data.message);
+                getAppointments();
+            }
+        } catch(err){
+            dispatch(hideLoading())
+            console.log(err)
+            message.error('Handle Status Error')
+        } finally {
+            dispatch(hideLoading())
+        }
     }
     const columns = [
         {
@@ -89,7 +106,7 @@ const Appointments = () => {
                             </button>
                             <button 
                                 className="btn btn-danger ms-2"
-                                onClick={() => handleStatus(record,'reject')}
+                                onClick={() => handleStatus(record,'rejected')}
                             >Reject
                             </button>
                         </div>
@@ -101,7 +118,7 @@ const Appointments = () => {
   return (
     <Layout>
         <h1 className="p-3">Appointments</h1>
-        <Table columns={columns} dataSource={Appointments}/>
+        <Table columns={columns} dataSource={Appointments} rowKey={(record) => record._id}/>
     </Layout>
   )
 }
