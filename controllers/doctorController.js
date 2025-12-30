@@ -1,5 +1,6 @@
 const appointmentModel = require('../models/appointmentModel');
-const doctorsModel = require('../models/doctorsModels')
+const doctorsModel = require('../models/doctorsModels');
+const usersModel = require('../models/userModels');
 
 //get doctor Info
 const getDoctorInfoController = async( req, res ) => {
@@ -79,9 +80,35 @@ const getDoctorAppointmentsController = async( req, res ) => {
     }
 }
 
+const updateStatusController = async( req, res ) => {
+    try{
+        const {appointmentsId, status} = req.body
+
+        const appointments = await appointmentModel.findByIdAndUpdate(appointmentsId, {status})
+        const user = await usersModel.findOne({_id: appointments.userId})
+        user.notification.push({
+            type: "New-appointment-request",
+            message: `Your appointment has been updated ${status}`,
+            path: "/user/appointments"
+        });
+        await user.save();
+        res.status(200).send({
+            success: true,
+            message: "Appointment Status Updated"
+        })
+    } catch(err){
+        console.log(err)
+        res.status(500).send({
+            success: false,
+            err,
+            message: "Error Updating the Status"
+        })
+    }
+}
 module.exports = { 
     getDoctorInfoController, 
     updateProfileController, 
     getDoctorIdController,
-    getDoctorAppointmentsController, 
+    getDoctorAppointmentsController,
+    updateStatusController,
 }
