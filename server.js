@@ -6,8 +6,9 @@ const connectDB = require('./config/db')
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const corsOptions = require('./config/corsOptions');
-const verifyJWT = require('./middleware/verifyJWT')
-const credentials = require('./middleware/credentials')
+const verifyJWT = require('./middleware/verifyJWT');
+const credentials = require('./middleware/credentials');
+const path = require('path');
 
 const PORT = process.env.PORT || 3500
 
@@ -40,19 +41,25 @@ app.use('/admin', require('./routes/AdminRoutes'));
 app.use('/doctor', require('./routes/DoctorRoutes'));
 app.use('/user', require('./routes/userRoutes'));
 
-app.all('{*splat}', (req, res) => {
-    res.status(404);
-    if (req.accepts('html')){
-        res.sendFile(path.join(__dirname, 'views', '404.html'));
-    }
-    else if (req.accepts('json')){
-        res.json({ error: '404 Not Found'});
-    }
-    else {
-        res.type('txt').send('404 Not Found');
-    }
+//serve static files
+app.use(express.static(path.join(__dirname, '/client/dist')));
+app.get('{*splat}', (req, res) => { 
+    res.sendFile(path.join(__dirname, '/client/dist/index.html'))
+})
+
+// app.all('{*splat}', (req, res) => {
+//     res.status(404);
+//     if (req.accepts('html')){
+//         res.sendFile(path.join(__dirname, 'views', '404.html'));
+//     }
+//     else if (req.accepts('json')){
+//         res.json({ error: '404 Not Found'});
+//     }
+//     else {
+//         res.type('txt').send('404 Not Found');
+//     }
     
-});
+// });
 
 app.listen(PORT, () => {
     console.log(
