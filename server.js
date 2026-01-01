@@ -42,9 +42,9 @@ app.use('/doctor', require('./routes/DoctorRoutes'));
 app.use('/user', require('./routes/userRoutes'));
 
 //serve static files
-app.use(express.static(path.join(__dirname, '/client/dist')));
+app.use(express.static(path.join(__dirname, 'client','dist')));
 app.get('{*splat}', (req, res) => { 
-    res.sendFile(path.join(__dirname, '/client/dist/index.html'))
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
 })
 
 // app.all('{*splat}', (req, res) => {
