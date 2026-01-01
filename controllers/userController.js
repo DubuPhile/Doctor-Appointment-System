@@ -65,7 +65,7 @@ const loginController = async(req, res) => {
             const result = await foundUser.save();
             console.log(result)
 
-            res.cookie('jwt', refreshToken, { cookieOptions , maxAge: 24 * 60 * 60 * 1000});
+            res.cookie('jwt', refreshToken, { cookieOptions , maxAge: 24 * 60 * 60 * 1000, path: '/'});
             res.json({ accessToken });
         }
         else {

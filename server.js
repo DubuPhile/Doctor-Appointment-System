@@ -1,4 +1,5 @@
 require('dotenv').config();
+const mongoose = require('mongoose')
 const express = require('express')
 const colors = require('colors')
 const morgan = require('morgan')
@@ -61,13 +62,13 @@ app.get('{*splat}', (req, res) => {
     
 // });
 
-app.listen(PORT, () => {
-    console.log(
-        `Server Running in ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan.white
-    )
-})
+// app.listen(PORT, () => {
+//     console.log(
+//         `Server Running in ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan.white
+//     )
+// })
 
-// mongoose.connection.once('open', () =>{
-//     console.log('Connected to MongoDB');
-//     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-// });
+mongoose.connection.once('open', () =>{
+    console.log('Connected to MongoDB');
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
