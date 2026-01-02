@@ -354,10 +354,11 @@ const bookAvailabilityController = async( req, res ) => {
                 .utc()
                 .toDate();
             
+            console.log(fromTime)
             console.log(toTime)
             const appointments = await appointmentModel.exists({
                 doctorId, 
-                date: moment(date, "DD-MM-YYYY").toISOString(), 
+                date: moment.tz(date, "DD-MM-YYYY", "Asia/Manila"), 
                 time: {
                     $gte:fromTime, $lte: toTime
                 }
