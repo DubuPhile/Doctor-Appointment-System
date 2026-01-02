@@ -254,8 +254,9 @@ const getApprovedDoctorController = async( req, res ) => {
 const bookAppointmentController = async( req, res ) => {
     try{
         // Convert date & time to ISO for comparison/storage
-        const appointmentDate = moment(req.body.date, 'DD-MM-YYYY').toISOString();
-        const appointmentTime = moment(`${req.body.date} ${req.body.time}`, 'DD-MM-YYYY HH:mm').toISOString();
+        const appointmentDate = moment.tz(req.body.date, 'DD-MM-YYYY', "Asia/Manila")
+        const appointmentTime = moment.tz(`${req.body.date} ${req.body.time}`, 'DD-MM-YYYY HH:mm', "Asia/Manila")
+        console.log(appointmentDate)
         console.log(appointmentTime)
         // Check if appointment already exists
         const existing = await appointmentModel.exists({
@@ -301,7 +302,6 @@ const bookAppointmentController = async( req, res ) => {
 const bookAvailabilityController = async( req, res ) => {
     try{
         const { date, time, doctorId } = req.body;
-        console.log(date, time)
         const appointmentMoment = moment(time, "HH:mm");
         const appointmentMinutes =
             appointmentMoment.hours() * 60 + appointmentMoment.minutes();
@@ -316,16 +316,12 @@ const bookAvailabilityController = async( req, res ) => {
         }
         const doctorStart = moment(doctor.timings[0]).tz("Asia/Manila");
         const doctorEnd = moment(doctor.timings[1]).tz("Asia/Manila");
-        console.log(doctor.timings[1])
-        console.log(doctorEnd)
         const startMinutes =
             doctorStart.hours() * 60 + doctorStart.minutes();
         const endMinutes =
             doctorEnd.hours() * 60 + doctorEnd.minutes();
     
-        console.log(endMinutes, appointmentMinutes, startMinutes)
-        console.log(appointmentMinutes < startMinutes)
-        console.log(appointmentMinutes > endMinutes)
+        
         // Outside doctor working hours
         if (
             appointmentMinutes < startMinutes ||
@@ -354,8 +350,6 @@ const bookAvailabilityController = async( req, res ) => {
                 .utc()
                 .toDate();
             
-            console.log(fromTime)
-            console.log(toTime)
             const appointments = await appointmentModel.exists({
                 doctorId, 
                 date: moment.tz(date, "DD-MM-YYYY", "Asia/Manila"), 
@@ -363,7 +357,6 @@ const bookAvailabilityController = async( req, res ) => {
                     $gte:fromTime, $lte: toTime
                 }
             })
-            console.log(appointments)
             return res.status(200).send({
                 success: true,
                 message: appointments ? 'Time slot already booked'
