@@ -316,8 +316,8 @@ const bookAvailabilityController = async( req, res ) => {
             message: "Doctor not found"
             });
         }
-        const doctorStart = moment(doctor.timings[0]);
-        const doctorEnd = moment(doctor.timings[1]);
+        const doctorStart = moment(doctor.timings[0], "HH:mm");
+        const doctorEnd = moment(doctor.timings[1], "HH:mm");
 
         const startMinutes =
             doctorStart.hours() * 60 + doctorStart.minutes();
