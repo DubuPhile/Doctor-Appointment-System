@@ -258,7 +258,7 @@ const bookAppointmentController = async( req, res ) => {
     try{
         // Convert date & time to ISO for comparison/storage
         const appointmentDate = moment(req.body.date, 'DD-MM-YYYY').toISOString();
-        const appointmentTime = moment(req.body.time, 'HH:mm').toISOString();
+        const appointmentTime = moment(`${req.body.date} ${req.body.time}`, 'DD-MM-YYYY HH:mm').toISOString();
 
         // Check if appointment already exists
         const existing = await appointmentModel.exists({

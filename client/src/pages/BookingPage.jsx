@@ -86,7 +86,7 @@ const BookingPage = () => {
       try {
         const res = await axiosPrivate.post('/user/book-availability', { doctorId, date, time })
         
-        if (res.data.message === "Time slot already booked") {
+        if (res.data.message === "Time slot already booked" || "Doctor is not available at this time") {
           setIsAvailable(false);
           message.warning(res.data.message);
           return;
