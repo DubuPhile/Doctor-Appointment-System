@@ -323,6 +323,8 @@ const bookAvailabilityController = async( req, res ) => {
             doctorStart.hours() * 60 + doctorStart.minutes();
         const endMinutes =
             doctorEnd.hours() * 60 + doctorEnd.minutes();
+    
+        console.log(endMinutes, appointmentMinutes, startMinutes)
         console.log(appointmentMinutes < startMinutes)
         console.log(appointmentMinutes > endMinutes)
         // Outside doctor working hours
