@@ -316,8 +316,8 @@ const bookAvailabilityController = async( req, res ) => {
             message: "Doctor not found"
             });
         }
-        const doctorStart = moment(doctor.timings[0], "HH:mm");
-        const doctorEnd = moment(doctor.timings[1], "HH:mm");
+        const doctorStart = moment(doctor.timings[0]);
+        const doctorEnd = moment(doctor.timings[1]);
 
         const startMinutes =
             doctorStart.hours() * 60 + doctorStart.minutes();
@@ -334,34 +334,36 @@ const bookAvailabilityController = async( req, res ) => {
             message: "Doctor is not available at this time"
             });
         }
-        const appointmentDateTime = moment(
-            `${date} ${time}`,
-            "DD-MM-YYYY HH:mm"
-        );
-        const fromTime = appointmentDateTime
-            .clone()
-            .subtract(59, "minute")
-            .toISOString();
+        else{
+            const appointmentDateTime = moment(
+                `${date} ${time}`,
+                "DD-MM-YYYY HH:mm"
+            );
+            const fromTime = appointmentDateTime
+                .clone()
+                .subtract(59, "minute")
+                .toISOString();
 
-        const toTime = appointmentDateTime
-            .clone()
-            .add(1, "hour")
-            .toISOString();
-        console.log(fromTime)
-        console.log(toTime)
-        const appointments = await appointmentModel.exists({
-            doctorId, 
-            date: moment(date, "DD-MM-YYYY").toISOString(), 
-            time: {
-                $gte:fromTime, $lte: toTime
-            }
-        })
-        console.log(appointments)
-        return res.status(200).send({
-            success: true,
-            message: appointments ? 'Time slot already booked'
-                                        : "Appointments Available"
+            const toTime = appointmentDateTime
+                .clone()
+                .add(1, "hour")
+                .toISOString();
+            
+            console.log(toTime)
+            const appointments = await appointmentModel.exists({
+                doctorId, 
+                date: moment(date, "DD-MM-YYYY").toISOString(), 
+                time: {
+                    $gte:fromTime, $lte: toTime
+                }
             })
+            console.log(appointments)
+            return res.status(200).send({
+                success: true,
+                message: appointments ? 'Time slot already booked'
+                                            : "Appointments Available"
+                })
+        }
     }catch(err){
         console.log(err)
         res.status(500).send({
