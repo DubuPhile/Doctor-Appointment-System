@@ -256,7 +256,7 @@ const bookAppointmentController = async( req, res ) => {
         // Convert date & time to ISO for comparison/storage
         const appointmentDate = moment(req.body.date, 'DD-MM-YYYY').toISOString();
         const appointmentTime = moment(`${req.body.date} ${req.body.time}`, 'DD-MM-YYYY HH:mm').toISOString();
-
+        console.log(appointmentTime)
         // Check if appointment already exists
         const existing = await appointmentModel.exists({
             doctorId: req.body.doctorId,
@@ -301,6 +301,7 @@ const bookAppointmentController = async( req, res ) => {
 const bookAvailabilityController = async( req, res ) => {
     try{
         const { date, time, doctorId } = req.body;
+        console.log(date, time)
         const appointmentMoment = moment(time, "HH:mm");
         const appointmentMinutes =
             appointmentMoment.hours() * 60 + appointmentMoment.minutes();
@@ -336,19 +337,22 @@ const bookAvailabilityController = async( req, res ) => {
             });
         }
         else{
-            const appointmentDateTime = moment(
+            const appointmentDateTime = moment.tz(
                 `${date} ${time}`,
-                "DD-MM-YYYY HH:mm"
+                "DD-MM-YYYY HH:mm",
+                "Asia/Manila"
             );
             const fromTime = appointmentDateTime
                 .clone()
                 .subtract(59, "minute")
-                .toISOString();
+                .utc()
+                .toDate();
 
             const toTime = appointmentDateTime
                 .clone()
                 .add(1, "hour")
-                .toISOString();
+                .utc()
+                .toDate();
             
             console.log(toTime)
             const appointments = await appointmentModel.exists({
