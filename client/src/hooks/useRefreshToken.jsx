@@ -4,7 +4,10 @@ import useAuth from "./useAuth";
 const useRefreshToken = () => {
     const {setAuth} = useAuth();
     const refresh = async () => {
-        const response = await axios.get('/refresh', {
+        const response = await axios.get(
+            process.env.NODE_ENV === 'production' 
+            ? 'https://doctor-appointment-dkp7.onrender.com/refresh' 
+            : '/refresh', {
             withCredentials: true
         });
         setAuth(prev => {
