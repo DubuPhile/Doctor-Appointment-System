@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const cookieOptions = require('./cookieOption');
 const doctorsModel = require ('../models/doctorsModels');
 const appointmentModel = require('../models/appointmentModel');
-const moment = require('moment');
+const moment = require("moment-timezone");
 
 //Register Controller
 const registerController = async(req, res) => {
@@ -313,8 +313,8 @@ const bookAvailabilityController = async( req, res ) => {
             message: "Doctor not found"
             });
         }
-        const doctorStart = moment(doctor.timings[0]);
-        const doctorEnd = moment(doctor.timings[1]);
+        const doctorStart = moment(doctor.timings[0]).tz("Asia/Manila");
+        const doctorEnd = moment(doctor.timings[1]).tz("Asia/Manila");
         console.log(doctor.timings[1])
         console.log(doctorEnd)
         const startMinutes =
