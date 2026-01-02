@@ -112,10 +112,7 @@ const applyDoctorController = async( req, res ) => {
         if (!Array.isArray(timings)) {
             return res.status(400).json({ success: false, message: "timings must be an array" });
         }
-        timings = timings.map(time => new Date(time));
-        if (timings.some(time => isNaN(time.getTime()))) {
-            return res.status(400).json({ success: false, message: "Invalid date in timings array" });
-        }
+        
 
         // Create new doctor document
         const newDoctor = new doctorsModel({
@@ -316,9 +313,10 @@ const bookAvailabilityController = async( req, res ) => {
             message: "Doctor not found"
             });
         }
-        const doctorStart = moment(doctor.timings[0], "HH:mm");
-        const doctorEnd = moment(doctor.timings[1], "HH:mm");
-
+        const doctorStart = moment(doctor.timings[0]);
+        const doctorEnd = moment(doctor.timings[1]);
+        console.log(doctor.timings[1])
+        console.log(doctorEnd)
         const startMinutes =
             doctorStart.hours() * 60 + doctorStart.minutes();
         const endMinutes =
