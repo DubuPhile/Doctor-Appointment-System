@@ -304,36 +304,7 @@ const bookAppointmentController = async( req, res ) => {
 const bookAvailabilityController = async( req, res ) => {
     try{
         const { date, time, doctorId } = req.body;
-        const appointmentMoment = moment(time, "HH:mm");
-        const appointmentMinutes =
-            appointmentMoment.hours() * 60 + appointmentMoment.minutes();
-
-        // Doctor start & end times
-        const doctor = await doctorsModel.findOne({userId: doctorId});
-        if (!doctor) {
-            return res.status(404).send({
-            success: false,
-            message: "Doctor not found"
-            });
-        }
-        const doctorStart = moment(doctor.timings[0].format("HH:mm"));
-        const doctorEnd = moment(doctor.timings[1].format("HH:mm"));
-
-        const startMinutes =
-            doctorStart.hours() * 60 + doctorStart.minutes();
-        const endMinutes =
-            doctorEnd.hours() * 60 + doctorEnd.minutes();
-
-        // Outside doctor working hours
-        if (
-            appointmentMinutes < startMinutes ||
-            appointmentMinutes > endMinutes
-        ) {
-            return res.status(200).send({
-            success: true,
-            message: "Doctor is not available at this time"
-            });
-        }
+        
         const appointmentDateTime = moment(
             `${date} ${time}`,
             "DD-MM-YYYY HH:mm"
