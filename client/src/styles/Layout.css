@@ -24,7 +24,9 @@
     width: 100%;
     padding-top: 3rem;
     border-radius: 5px;
-    background-color: rgba(51, 1, 1, 0.63);
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
     margin-right: 20px;
     margin-top: -0.7rem;
