@@ -15,6 +15,86 @@
     margin-right: 20px;
     color: white;
 }
+.sidebarBurger{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    height: 100vh;
+    width: 100%;
+    padding-top: 3rem;
+    border-radius: 5px;
+    background-color: rgba(51, 1, 1, 0.63);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
+    margin-right: 20px;
+    margin-top: -0.7rem;
+    margin-left: -0.7rem;
+    color: white;
+    z-index: 2;
+
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+}
+.sidebarBurger.open {
+  transform: translateY(0);
+}
+.burgerbtn{
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    border: none;
+    margin: 1rem;
+    border-radius: 5px;
+    z-index: 9999;
+    background-color: hsla(0, 0%, 0%, 0.4);
+}
+/*Hamburger-line*/
+.hamburger-line {
+  position: fixed;
+  top: 1.5rem;  
+  left: 1.1rem;             /* top-4 */
+  width: 2rem;             /* w-8 */
+  height: 0.25rem;
+  margin-left: 1rem;       /* h-1 */
+  background-color: #ffffff;  /* bg-white */
+  border-radius: 0.25rem;  /* rounded */
+  transition: all 0.5s ease;
+  margin-top: 1.5rem;
+  
+}
+
+.hamburger-line::before,
+.hamburger-line::after {
+  content: "";
+  position: absolute;
+  width: 2rem;
+  left: 0;
+  height: 0.25rem;
+  background-color: #ffffff;
+  border-radius: 0.25rem;
+  transition: all 0.5s ease;
+}
+
+.hamburger-line::before {
+  transform: translateY(-0.75rem);
+}
+
+.hamburger-line::after {
+  transform: translateY(0.75rem);
+}
+
+.burgerbtn.open .hamburger-line {
+  background-color: transparent; 
+  transform: rotate(720deg); 
+}
+
+.burgerbtn.open .hamburger-line::before {
+  transform: rotate(45deg);
+}
+
+.burgerbtn.open .hamburger-line::after {
+  transform: rotate(-45deg);
+}
 
 .content{
     width: 100%;
@@ -35,13 +115,11 @@
     background-color: white;
     min-height: 100vh;
 }
-
-
-@media (max-width: 768px) {
+@media (max-width: 980px) {
     .body{
         height: auto;
         min-height: 100%;
-}
+    }
 }
 
 .logo h6{
@@ -100,7 +178,7 @@
     text-transform: uppercase;
 }
 .Logoutbtn{
-    background-color: rgb(51, 1, 1);
+    background-color: transparent;
     border: none;
 }
 .Logout {
