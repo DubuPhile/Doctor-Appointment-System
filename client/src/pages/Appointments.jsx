@@ -7,10 +7,12 @@ import { useUserInfo } from "../components/useUserInfo"
 import dayjs from 'dayjs'
 import { Table } from "antd"
 import { message } from "antd";
+import useMediaQuery from "../hooks/useMediaQuery";
 
 const Appointments = () => {
     const {userId, isDoctor} = useUserInfo();
     const [Appointments, setAppointments] = useState([]);
+    const isMobile = useMediaQuery("(max-width: 768px)");
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
     const getAppointments = async() => {      
@@ -51,6 +53,8 @@ const Appointments = () => {
         {
             title:'ID',
             dataIndex:'_id',
+            render: (text) =>
+            isMobile ? `${text.substring(0, 6)}...` : text,
         },
         {
             title:'Doctor',
