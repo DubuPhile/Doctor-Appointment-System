@@ -54,7 +54,7 @@ const Appointments = () => {
             title:'ID',
             dataIndex:'_id',
             render: (text) =>
-            isMobile ? `${text.substring(0, 6)}...` : text,
+            isMobile ? `...${text.substring(text.length - 3)}` : text,
         },
         {
             title:'Doctor',
@@ -71,9 +71,13 @@ const Appointments = () => {
             title:'Contact',
             dataIndex:'phone',
             render: (text, record) => {
+                const phone = record?.doctorInfo?.phone || "";
+
                 return(
                 <span>
-                    {record.doctorInfo.phone}
+                    {isMobile && phone.length > 4
+                        ? `...${phone.substring(phone.length - 4)}`
+                        : phone}
                 </span>
                 )
             }
