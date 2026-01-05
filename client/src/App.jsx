@@ -17,15 +17,21 @@ import { NotificationProvider } from './context/NotificationProvider'
 import Profile from './pages/doctor/Profile'
 import BookingPage from './pages/BookingPage'
 import Appointments from './pages/Appointments'
+import useAuth from './hooks/useAuth'
 
 function App() {
+  const {auth} = useAuth();
   const {loading} = useSelector(state => state.alerts)
   return (
     <>  
       <NotificationProvider>
         {loading ? (<Spinner/>) : (
           <Routes>
-            <Route path="/" element = {<Navigate to ="/login"/>}/>
+            <Route path="/" element = {
+              auth 
+                ? <Navigate to ="/home"/> 
+                : <Navigate to ="/login"/>
+            }/>
             <Route path='/login' element = {<Login />} />
             <Route path='/register' element = {<Register />} />
             
