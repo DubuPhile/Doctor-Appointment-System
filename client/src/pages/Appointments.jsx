@@ -126,7 +126,7 @@ const Appointments = () => {
   return (
     <Layout>
         <h1 className="p-3">Appointments</h1>
-        <Table columns={columns} dataSource={Appointments} rowKey={(record) => record._id}/>
+        <Table className="AppointmentsTable" columns={columns} dataSource={Appointments} rowKey={(record) => record._id}/>
     </Layout>
   )
 }
