@@ -19,9 +19,7 @@ createRoot(document.getElementById('root')).render(
     <StrictMode>
       <BrowserRouter>
         <AuthProvider>
-          <GoogleOAuthProvider clientId = {
-              process.env.NODE_ENV === 'production' ? VITE_GOOGLE_CLIENT_ID :
-              import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+          <GoogleOAuthProvider clientId = {import.meta.env.VITE_GOOGLE_CLIENT_ID}>
             <Routes>
               <Route path="/*" element={<App />}/> 
             </Routes>
