@@ -7,6 +7,7 @@ import { useRef, useState,useEffect } from 'react';
 import useAuth from '../hooks/useAuth'
 import { useDispatch } from 'react-redux';
 import { showLoading,hideLoading } from '../redux/features/alertSlice';
+import { GoogleLogin } from '@react-oauth/google';
 
 
 const Login = () => {
@@ -91,6 +92,40 @@ const Login = () => {
               onChange ={ (e) => setPassword(e.target.value)}
             />
           </Form.Item>
+          <div className="google-login mt-3">
+            <GoogleLogin
+              onSuccess={async (credentialResponse) => {
+                try {
+                  dispatch(showLoading());
+
+                  const res = await axios.post(
+                    '/auth/google',
+                    { token: credentialResponse.credential },
+                    { withCredentials: true }
+                  );
+
+                  dispatch(hideLoading());
+
+                  const accessToken = res?.data.accessToken;
+
+                  setAuth({
+                    user,
+                    accessToken
+                  });
+                  message.success('Logged in with Google');
+                  navigate('/home');
+
+                } catch (err) {
+                  dispatch(hideLoading());
+                  message.error('Google login failed');
+                }
+              }}
+              onError={() => {
+                message.error('Google login failed');
+              }}
+            />
+          </div>
+          <br/>
           <div className='login-btn'>
             <button className="btn btn-primary" type="submit">Sign-in</button>
             <Link to ="/register" className='m-2'>Don't Have Account?</Link>
