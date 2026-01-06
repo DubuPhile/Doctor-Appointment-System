@@ -29,11 +29,9 @@ app.use(cookieParser())
 app.use(morgan('dev'))
 
 //COOP / COEP headers
-app.use((req, res, next) => {
-  if (!req.path.startsWith("/login")) {
+app.use("/auth",(req, res, next) => {
     res.setHeader("Cross-Origin-Opener-Policy", "restrict-properties");
     res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-  }
   next();
 });
 
