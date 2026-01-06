@@ -17,11 +17,7 @@ const handleLogout = async (req, res) => {
     foundUser.refreshToken = '';
     const result = await foundUser.save();
     console.log(result);
-    res.clearCookie('jwt', 
-        httpOnly = true,
-        sameSite = 'None',
-        secure = true
-    ); // sercure: true - only serves on https
+    res.clearCookie('jwt', cookieOptions); // sercure: true - only serves on https
     res.sendStatus(204);
 }       
 
