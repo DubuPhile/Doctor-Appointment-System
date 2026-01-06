@@ -8,7 +8,9 @@ const userSchema = new schema({
     },
     email:{
         type: String,
-        required: [true, 'Email is required']
+        required: [true, 'Email is required'],
+        unique: true,
+        lowercase: true,
     },
     roles: {
         User: {
@@ -23,8 +25,16 @@ const userSchema = new schema({
     },
     password:{
         type: String,
-        required: [true, 'Password is required'],
         select: false,
+    },
+    googleId:{
+        type: String,
+        select: false,
+    },
+    authProvider:{
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local',
     },
     notification: {
         type: Array,
