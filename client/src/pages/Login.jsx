@@ -124,7 +124,8 @@ const Login = () => {
                 message.error('Google login failed');
               }}
               useOneTap={false}  
-              auto_select={false} 
+              auto_select={false}
+              prompt="select_account"
             />
           </div>
           <br/>
