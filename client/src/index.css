@@ -20,3 +20,11 @@ body{
     width: 250px !important;
     margin-top: 30px !important;
 }
+.bookpageDateTime{
+    max-width: 300px;
+}
+
+.AppointmentsTable .ant-table-cell {
+    font-size: clamp(10px, 1.2vw, 14px);
+}
+
