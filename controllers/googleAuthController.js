@@ -1,13 +1,14 @@
 const { OAuth2Client } = require('google-auth-library');
 const User = require('../models/userModels');
 const jwt = require('jsonwebtoken');
+const cookieOption = require('./cookieOption');
 
 
 
 const googleLogin = async (req, res) => {
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
     const { token } = req.body;
-    console.log(req.body)
+    
     try {
         // 1. Verify token with Google
         const ticket = await client.verifyIdToken({
@@ -53,7 +54,7 @@ const googleLogin = async (req, res) => {
         );
 
         const refreshToken = jwt.sign(
-            { userId: user._id },
+            { "user": user.user },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: '7d' }
         );
@@ -61,13 +62,14 @@ const googleLogin = async (req, res) => {
         // 6. Save refresh token
         user.refreshToken = refreshToken;
         await user.save();
+    
 
         // 7. Send cookie
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'None',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            maxAge: 24 * 60 * 60 * 1000,
             path: '/',
         });
 

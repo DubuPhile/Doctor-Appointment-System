@@ -1,11 +1,10 @@
 const userModel = require('../models/userModels');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const cookieOptions = require('./cookieOption');
 const doctorsModel = require ('../models/doctorsModels');
 const appointmentModel = require('../models/appointmentModel');
 const moment = require("moment-timezone");
-console.log(cookieOptions)
+
 //Register Controller
 const registerController = async(req, res) => {
     try{
