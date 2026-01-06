@@ -123,6 +123,8 @@ const Login = () => {
               onError={() => {
                 message.error('Google login failed');
               }}
+              useOneTap={false}  
+              auto_select={false} 
             />
           </div>
           <br/>
