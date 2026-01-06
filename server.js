@@ -30,8 +30,10 @@ app.use(morgan('dev'))
 
 //COOP / COEP headers
 app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  if (!req.path.startsWith("/login")) {
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  }
   next();
 });
 
