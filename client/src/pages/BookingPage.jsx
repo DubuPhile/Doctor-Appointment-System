@@ -116,7 +116,7 @@ const BookingPage = () => {
               <h4>Dr. {doctors.firstName +" "+ doctors.lastName}</h4>
               <h4>Fees : {doctors.feesPerConsultation}</h4>
               <h4>Time : {doctors.timings?.[0]+" - "+doctors.timings?.[1]}</h4>
-              <div className="d-flex flex-column w-25">
+              <div className="d-flex flex-column bookpageDateTime">
                 <DatePicker 
                   className="m-2"
                   format={"DD-MM-YYYY"} 
