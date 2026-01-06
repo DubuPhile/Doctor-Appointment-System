@@ -34,6 +34,7 @@ app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
 app.use('/refresh', require('./routes/refreshToken'));
 app.use('/logout', require('./routes/logout'));
+app.use('/auth', require('./routes/googleAuth'));
 
 app.use(verifyJWT);
 app.use('/users', require('./routes/api/Users'))
@@ -42,6 +43,7 @@ app.use('/notifications', require('./routes/getUserNotifications'));
 app.use('/admin', require('./routes/AdminRoutes'));
 app.use('/doctor', require('./routes/DoctorRoutes'));
 app.use('/user', require('./routes/userRoutes'));
+
 
 //serve static files
 app.use(express.static(path.join(__dirname, 'client','dist')));
