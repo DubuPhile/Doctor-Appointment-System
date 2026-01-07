@@ -40,7 +40,7 @@ app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
 app.use('/refresh', require('./routes/refreshToken'));
 app.use('/logout', require('./routes/logout'));
-app.use('/auth', require('./routes/googleAuth'));
+app.use('/auth', require('./routes/FirebaseAuth'));
 
 app.use(verifyJWT);
 app.use('/users', require('./routes/api/Users'))
