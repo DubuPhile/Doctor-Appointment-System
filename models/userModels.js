@@ -27,13 +27,13 @@ const userSchema = new schema({
         type: String,
         select: false,
     },
-    googleId:{
+    authProviderId:{
         type: String,
         select: false,
     },
     authProvider:{
         type: String,
-        enum: ['local', 'google'],
+        enum: ['local', 'google','firebase'],
         default: 'local',
     },
     notification: {
