@@ -27,4 +27,24 @@ body{
 .AppointmentsTable .ant-table-cell {
     font-size: clamp(10px, 1.2vw, 14px);
 }
-
+.firebaseLogin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    background-color: white;
+    color: hsl(0, 0%, 7%);
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 20px;
+}
+.firebaseLogin img{
+    margin-right: 10px;
+}
+.firebaseLogin:hover{
+    background-color: hsl(0, 0%, 80%);
+}
+.firebaseLogin:active{
+    background-color: hsl(0, 0%, 70%);
+}
