@@ -1,6 +1,7 @@
 const admin = require('../config/firebaseAdmin');
 const User = require('../models/userModels');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const firebaseLogin = async (req, res) => {
   const { token } = req.body;
@@ -9,7 +10,7 @@ const firebaseLogin = async (req, res) => {
     const decodedToken = await admin.auth().verifyIdToken(token);
     const { uid, email, name } = decodedToken;
 
-    let foundUser = await User.findOne({ email }).select('+authProviderId');
+    let foundUser = await User.findOne({ email }).select('+password');
     if (!foundUser) {
       foundUser = await User.create({
         user: name,
@@ -62,8 +63,7 @@ const firebaseLogin = async (req, res) => {
 
 const setPasswordFirebase = async( req, res ) => {
   try {
-    const userId = req._Id;
-    const { password } = req.body;
+    const { password,userId } = req.body;
 
     if (!password || password.length < 8) {
       return res.status(400).json({ message: "Password too short" });
@@ -74,8 +74,10 @@ const setPasswordFirebase = async( req, res ) => {
     await User.findByIdAndUpdate(userId, {
       password: hashedPassword,
     });
-
-    res.json({ message: "Set Password Successfully" });
+    res.status(200).send({
+      success: true,
+      message: "Set Password Successfully",
+    })
 
   } catch (err) {
     console.error(err);
