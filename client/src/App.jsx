@@ -13,11 +13,13 @@ import ApplyDoctor from './pages/ApplyDoctor'
 import Notification from './pages/Notification'
 import Users from './pages/Admin/Users'
 import Doctors from './pages/Admin/Doctors'
+import SetPassword from './pages/setPassword'
 import { NotificationProvider } from './context/NotificationProvider'
 import Profile from './pages/doctor/Profile'
 import BookingPage from './pages/BookingPage'
 import Appointments from './pages/Appointments'
 import useAuth from './hooks/useAuth'
+
 
 function App() {
   const {auth} = useAuth();
@@ -38,6 +40,7 @@ function App() {
             <Route element = {<PersistLogin />}>
               <Route element = {<RequireAuth allowedRoles={[2001,5150]}/>}>         
                 <Route path='/home' element = {<Home />} />
+                <Route path='/set-password' element = {<SetPassword />} />
                 <Route path='/notification' element = {<Notification />} />
                 <Route path = '/logout' element = {<Logout />} />
                 <Route path = '/book-appointment/:doctorId' element = {<BookingPage />} />
