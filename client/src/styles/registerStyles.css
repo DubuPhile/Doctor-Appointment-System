@@ -17,19 +17,4 @@ section {
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
   background-color: rgba(0,0,0,0.4);
 }
-.register-h3 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: yellow;
-}
 
-.custom-color {
-  color: yellow;
-}
-
-.register-btn{
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-}

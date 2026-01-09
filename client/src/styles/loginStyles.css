@@ -5,7 +5,7 @@ section {
   height: 100vh;
 }
 
-.logform-container {
+.logform-container , .setPassword{
   width: 100%;
   max-width: 320px;
   min-height: 300px;
@@ -17,7 +17,7 @@ section {
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
   background-color: rgba(0,0,0,0.4);
 }
-.login-h2 {
+.login-h2, .register-h3 , .setPassword-h3 {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +28,7 @@ section {
   color: yellow;
 }
 
-.login-btn{
+.login-btn, .register-btn{
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
