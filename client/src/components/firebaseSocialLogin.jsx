@@ -33,9 +33,10 @@ const FirebaseSocialLogin = () => {
         user: user.displayName,
         accessToken: res.data.accessToken,
       });
-
+      
       message.success("Logged in successfully!");
-      navigate("/home");
+      await res.data.hasLocalPassword === false ? navigate("/set-password") : navigate("/home");
+      
     } catch (err) {
       dispatch(hideLoading());
       console.error(err);
