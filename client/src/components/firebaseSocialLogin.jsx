@@ -1,7 +1,7 @@
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../hooks/firebase";
 import axios from "../api/axios";
-import { message, Button } from "antd";
+import { message } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { showLoading, hideLoading } from "../redux/features/alertSlice";
