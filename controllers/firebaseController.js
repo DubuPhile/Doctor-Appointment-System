@@ -53,11 +53,38 @@ const firebaseLogin = async (req, res) => {
         path: '/',
     });
 
-    res.json({ accessToken });
+    res.json({ accessToken, hasLocalPassword: !!foundUser.password });
   } catch (err) {
     console.error(err);
     res.status(401).json({ message: 'Firebase authentication failed' });
   }
 };
 
-module.exports = { firebaseLogin };
+const setPasswordFirebase = async( req, res ) => {
+  try {
+    const userId = req._Id;
+    const { password } = req.body;
+
+    if (!password || password.length < 8) {
+      return res.status(400).json({ message: "Password too short" });
+    }
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await User.findByIdAndUpdate(userId, {
+      password: hashedPassword,
+    });
+
+    res.json({ message: "Set Password Successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to set password" });
+  }
+};
+
+
+module.exports = { 
+                    firebaseLogin,
+                    setPasswordFirebase,
+                  };
