@@ -24,15 +24,15 @@ const DoctorList = ({ doctor }) => {
                 <p><b>Schedule: {doctor.timings?.map(t => t.format('HH:mm')).join(' - ')}</b></p>
             </div>
             <div className = "flip-card-back">
-                <div>
+                <div className = "DoctorDescription">
                     <p>
-                        <b>Specialization: {doctor.specialization}</b>
+                        <b>Specialization:</b> {doctor.specialization}
                     </p>
                     <p>
-                        <b>Experience: {doctor.experience}</b>
+                        <b>Experience:</b> {doctor.experience}
                     </p>
                     <p>
-                        <b>Fees Per Consultation: {doctor.feesPerConsultation}</b>
+                        <b>Fees Per Consultation:</b> {doctor.feesPerConsultation}
                     </p>
                 </div>
             </div>

@@ -24,6 +24,10 @@
     width: 150px;
     height: 150px;
 }
+.DoctorDescription{
+    margin: 10px;
+    text-align: start;
+}
 .flip-card:hover .flip-card-inner{
     transform: rotateY(180deg);
     cursor: pointer;
