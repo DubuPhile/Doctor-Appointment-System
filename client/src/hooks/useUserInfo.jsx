@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import useAuth from "../hooks/useAuth";
+import useAuth from "./useAuth";
 import {jwtDecode} from "jwt-decode";
 
 export const useUserInfo = () => {
