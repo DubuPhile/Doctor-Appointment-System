@@ -5,7 +5,7 @@ import { message } from 'antd';
 import axios from '../api/axios'
 import { useDispatch } from 'react-redux';
 import { showLoading,hideLoading } from '../redux/features/alertSlice';
-import { useUserInfo } from "../components/useUserInfo";
+import { useUserInfo } from "../hooks/useUserInfo";
 
 const PWD_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 

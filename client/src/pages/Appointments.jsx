@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useDispatch } from 'react-redux';
 import { showLoading,hideLoading } from '../redux/features/alertSlice';
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
-import { useUserInfo } from "../components/useUserInfo"
+import { useUserInfo } from "../hooks/useUserInfo"
 import dayjs from 'dayjs'
 import { Table } from "antd"
 import { message } from "antd";

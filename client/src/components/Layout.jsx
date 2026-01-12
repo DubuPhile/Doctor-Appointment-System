@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import "../styles/Layout.css"
 import Sidebar from "./Sidebar"
-import {useUserInfo} from "./useUserInfo"
+import {useUserInfo} from "../hooks/useUserInfo"
 import LogOut from "./logout"
 import { Badge } from "antd"
 import useNotif from "../hooks/useNotif"

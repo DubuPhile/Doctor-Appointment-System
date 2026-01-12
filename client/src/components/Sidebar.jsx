@@ -1,6 +1,6 @@
 import { userMenu, AdminMenu } from "../data/data"
 import { Link, useLocation } from "react-router-dom"
-import { useUserInfo } from "./useUserInfo";
+import { useUserInfo } from "../hooks/useUserInfo";
 const Sidebar = () => {
     const location = useLocation();
     const {userId , isDoctor, roles} = useUserInfo();

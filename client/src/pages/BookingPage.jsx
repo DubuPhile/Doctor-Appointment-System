@@ -1,6 +1,6 @@
 import Layout from "../components/Layout"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
-import {useUserInfo} from "../components/useUserInfo"
+import {useUserInfo} from "../hooks/useUserInfo"
 import { useDispatch } from 'react-redux';
 import { showLoading,hideLoading } from '../redux/features/alertSlice';
 import { useEffect, useState } from "react"
