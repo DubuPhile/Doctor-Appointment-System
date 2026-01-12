@@ -13,6 +13,7 @@ import ApplyDoctor from './pages/ApplyDoctor'
 import Notification from './pages/Notification'
 import Users from './pages/Admin/Users'
 import Doctors from './pages/Admin/Doctors'
+import AdminAppointments from './pages/Admin/AdminAppointments'
 import SetPassword from './pages/setPassword'
 import { NotificationProvider } from './context/NotificationProvider'
 import Profile from './pages/doctor/Profile'
@@ -57,6 +58,7 @@ function App() {
               <Route element = {<RequireAuth allowedRoles={[5150]}/>}>
                 <Route path='/admin/doctors' element = {<Doctors />} />
                 <Route path='/admin/users' element = {<Users />} />
+                <Route path='/admin/appointments' element = {<AdminAppointments />} />
 
               </Route>
             </Route>
