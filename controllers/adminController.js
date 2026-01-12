@@ -1,5 +1,6 @@
 const doctorsModel = require ('../models/doctorsModels')
 const usersModel = require ('../models/userModels')
+const appointmentModel = require('../models/appointmentModel');
 
 const getAllUsersController = async( req , res ) => {
 
@@ -71,6 +72,49 @@ const changeAccountStatusController = async( req, res ) => {
         })
     }
 }
+const getAllAppointments = async( req, res ) => {
+    try {
+    const appointments = await appointmentModel.find().populate('doctorInfo').populate('userInfo');
+    if(!appointments) return res.sendStatus(204).json({'message':'No Appointments found'});
+    res.status(200).json({
+        success: true,
+        data: appointments
+    });
+    }catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch appointments',
+        });
+    }
+}
+const deleteAppointments = async ( req, res ) => {
+    const { appointmentsId } = req.body
+    console.log(req.body)
+    try{
+        const appointments = await appointmentModel.findById(appointmentsId)
+        console.log(appointments)
+        if(!appointments) return res.status(204).json({"message": `No appointments found match ${appointmentsId}`})
+        const result = await appointments.deleteOne()
+        res.status(204).json({
+            success: true,
+            message: "Delete Successfully",
+            data: result
+        })
 
+    }catch(err){
+        console.log(err)
+        res.status(500).json({
+            success: false,
+            message: "Invalid"
+        })
+    }
+}
 
-module.exports = {getAllDoctorsController, getAllUsersController, changeAccountStatusController}
+module.exports = {
+    getAllDoctorsController, 
+    getAllUsersController, 
+    changeAccountStatusController, 
+    getAllAppointments,
+    deleteAppointments,
+}
