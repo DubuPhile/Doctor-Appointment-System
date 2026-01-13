@@ -27,6 +27,14 @@ const userSchema = new schema({
         type: String,
         select: false,
     },
+    loginAttempts: {
+    type: Number,
+    default: 0
+    },
+    lockUntil: {
+        type: Date,
+        default: null
+    },
     authProviderId:{
         type: String,
         select: false,
@@ -48,6 +56,6 @@ const userSchema = new schema({
         type:String,
         select: false,
     }
-})
+},{timestamps: true })
 
 module.exports = mongoose.model('User', userSchema);
