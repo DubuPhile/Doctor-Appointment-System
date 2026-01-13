@@ -54,7 +54,8 @@ const Users = () => {
       dataIndex: 'actions',
       render: ( text , record ) => (
         <div className="d-flex">
-          <button className="btn btn-danger">Block</button>
+          {!Object.values(record.roles).includes(5150) && (
+          <button className="btn btn-danger">Block</button>)}
         </div>
       )
     },
