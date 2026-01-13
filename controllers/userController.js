@@ -36,11 +36,42 @@ const loginController = async(req, res) => {
                 { user: user },
                 { email: user }
             ]
-         }).select("+password +refreshToken").exec();
+         }).select("+password +refreshToken +loginAttempts +lockUntil").exec();
         if(!foundUser){
             return res.sendStatus(401)
         }
+         if (foundUser.lockUntil && foundUser.lockUntil > Date.now()) {
+            return res.status(403).json({
+                message: `Account locked. Try again in ${Math.ceil(
+                    (foundUser.lockUntil - Date.now()) / 60000
+                )} minutes.`
+            });
+        }
+        console.log(foundUser.lockUntil)
         const match = await bcrypt.compare(password, foundUser.password);
+        if (!match) {
+            // Increment loginAttempts
+            foundUser.loginAttempts = (foundUser.loginAttempts || 0) + 1;
+
+            const MAX_ATTEMPTS = 5;
+            const LOCK_TIME = 30 * 60 * 1000; // 30 minutes
+
+            // Lock account if max attempts reached
+            if (foundUser.loginAttempts >= MAX_ATTEMPTS) {
+                foundUser.lockUntil = Date.now() + LOCK_TIME;
+                await foundUser.save();
+                return res.status(403).json({
+                    message: "Account locked due to too many failed login attempts. Try again later."
+                });
+            }
+
+            await foundUser.save();
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        foundUser.loginAttempts = 0;
+        foundUser.lockUntil = null;
+
         if(match) {
             const roles = Object.values(foundUser.roles).filter(Boolean);
             const accessToken = jwt.sign(
@@ -131,7 +162,6 @@ const applyDoctorController = async( req, res ) => {
 
         await newDoctor.save();
 
-        // Optional: notify admin
         const adminUser = await userModel.findOne({ "roles.Admin": 5150 });
         if (adminUser) {
             const newNotification = {
@@ -165,6 +195,7 @@ const applyDoctorController = async( req, res ) => {
         }
     }
 };
+
 // get the Notifications
 const getUserNotifications = async (req, res) => {
   try {
@@ -257,6 +288,7 @@ const bookAppointmentController = async( req, res ) => {
         const appointmentTime = moment.tz(`${req.body.date} ${req.body.time}`, 'DD-MM-YYYY HH:mm', "Asia/Manila")
         console.log(appointmentDate)
         console.log(appointmentTime)
+
         // Check if appointment already exists
         const existing = await appointmentModel.exists({
             doctorId: req.body.doctorId,
@@ -270,6 +302,7 @@ const bookAppointmentController = async( req, res ) => {
                 message: 'Time slot already booked'
             });
         }
+
         // Create new appointment
         req.body.date = appointmentDate;
         req.body.time = appointmentTime;
