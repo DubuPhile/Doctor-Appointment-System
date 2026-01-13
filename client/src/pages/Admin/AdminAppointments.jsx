@@ -9,6 +9,7 @@ import useMediaQuery from "../../hooks/useMediaQuery";
 
 const Appointments = () => {
     const [Appointments, setAppointments] = useState([]);
+    const [sortedInfo, setSortedInfo] = useState({})
     const isMobile = useMediaQuery("(max-width: 768px)");
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
@@ -48,12 +49,64 @@ const Appointments = () => {
         {
             title:'ID',
             dataIndex:'_id',
+            key:'_id',
             render: (text) =>
             isMobile ? `...${text.substring(text.length - 3)}` : text,
         },
-        {
-            title:'Doctor',
+        {   
+            dataIndex:'patient',
+            key:'patient',
+            title:(<span
+                style={{cursor: 'pointer', userSelect: 'none'}}
+                onClick={() => setSortedInfo(prev => ({
+                    columnKey: 'patient',
+                    order: prev.order === 'ascend' ? 'descend' : 'ascend'
+                }))
+                }
+                >
+                Patient{sortedInfo.columnKey === 'patient' && 
+                    (sortedInfo.order === 'ascend' ? ' ⬆️' : ' ⬇️')}
+                </span>
+            ),
+            sorter: (a,b) => 
+                (a?.userInfo?.user || '').localeCompare(b?.userInfo?.user || '')
+            ,
+            sortOrder: sortedInfo.columnKey === 'patient' && sortedInfo.order,
+            showSorterTooltip: false,
+            render: (text, record) => {
+                return(
+                    <span>
+                        {record?.userInfo?.user ?? "unknown"}
+                    </span>
+                )
+            }
+        },
+        {   
             dataIndex:'doctor',
+            key: 'doctor',
+            title:(
+                <span
+                style={{ cursor: 'pointer', userSelect: 'none' }}
+                onClick={() =>
+                    setSortedInfo(prev => ({
+                    columnKey: 'doctor',
+                    order: prev.order === 'ascend' ? 'descend' : 'ascend'
+                    }))
+                }
+                >
+                Doctor
+                {sortedInfo.columnKey === 'doctor' &&
+                    (sortedInfo.order === 'ascend' ? ' ⬆️' : ' ⬇️')}
+                </span>
+            ),
+            sorter: (a, b) => {
+                const nameA = `${a?.doctorInfo?.firstName || ''} ${a?.doctorInfo?.lastName || ''}`;
+                const nameB = `${b?.doctorInfo?.firstName || ''} ${b?.doctorInfo?.lastName || ''}`;
+
+                return nameA.localeCompare(nameB);
+            },
+            sortOrder: sortedInfo.columnKey === 'doctor' && sortedInfo.order,
+            showSorterTooltip: false,
             render: (text, record) => {
                 return(
                     <span>
@@ -65,6 +118,7 @@ const Appointments = () => {
         {
             title:'Contact',
             dataIndex:'phone',
+            key: 'phone',
             render: (text, record) => {
                 const phone = record?.doctorInfo?.phone || "";
 
@@ -77,20 +131,31 @@ const Appointments = () => {
                 )
             }
         },
-        {
-            title:'Patient',
-            dataIndex:'patient',
-            render: (text, record) => {
-                return(
-                    <span>
-                        {record?.userInfo?.user ?? "unknown"}
-                    </span>
-                )
-            }
-        },
-        {
-            title:'Date & Time',
-            dataIndex:'Date',
+        {   
+            dataIndex:'datetime',
+            key: 'datetime',
+            title: (
+                <span
+                style={{ cursor: 'pointer', userSelect: 'none' }}
+                onClick={() =>
+                    setSortedInfo(prev => ({
+                    columnKey: 'datetime',
+                    order: prev.order === 'ascend' ? 'descend' : 'ascend'
+                    }))
+                }
+                >
+                Date & Time
+                {sortedInfo.columnKey === 'datetime' &&
+                    (sortedInfo.order === 'ascend' ? ' ⬆️' : ' ⬇️')}
+                </span>
+            ),
+            sorter: (a, b) => {
+                const dateTimeA = dayjs(a.date).hour(dayjs(a.time).hour()).minute(dayjs(a.time).minute()).second(dayjs(a.time).second());
+                const dateTimeB = dayjs(b.date).hour(dayjs(b.time).hour()).minute(dayjs(b.time).minute()).second(dayjs(b.time).second());
+                 return dateTimeA.valueOf() - dateTimeB.valueOf();
+            },
+            sortOrder: sortedInfo.columnKey === 'datetime' && sortedInfo.order,
+            showSorterTooltip: false,
             render: (text, record) => {
                 return(
                     <span>
