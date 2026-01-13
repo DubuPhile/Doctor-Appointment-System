@@ -5,8 +5,6 @@ import axios from '../api/axios'
 import { message } from 'antd';
 import { useRef, useState,useEffect } from 'react';
 import useAuth from '../hooks/useAuth'
-import { useDispatch } from 'react-redux';
-import { showLoading,hideLoading } from '../redux/features/alertSlice';
 import FirebaseSocialLogin from '../components/firebaseSocialLogin';
 
 
@@ -20,8 +18,6 @@ const Login = () => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
     if(userRef.current){
     userRef.current.focus();
@@ -31,7 +27,7 @@ const Login = () => {
   const onFinishHandler = async(e) => {
     
     try{
-      dispatch(showLoading())
+    
       const res = await axios.post('/login', 
         {user, password},
         {
@@ -39,7 +35,7 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      dispatch(hideLoading())
+      
       if(res.status === 200){
         message.success('Login Successfully')
         const accessToken = res?.data.accessToken;
@@ -49,7 +45,7 @@ const Login = () => {
         navigate('/home')
       } 
     } catch(err){
-      dispatch(hideLoading())
+      
       if(!err?.response) {
         message.error('No response from Server');  
       }
@@ -58,6 +54,9 @@ const Login = () => {
       }
       else if (err.response?.status === 401){
         message.error('Unauthorized');
+      }
+      else if (err.response?.status === 403){
+        message.error(err.response?.data.message);
       }
       else {
         message.error('Log-in Failed');
