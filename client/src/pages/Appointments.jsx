@@ -82,9 +82,31 @@ const Appointments = () => {
                 )
             }
         },
-        {
-            title:'Date & Time',
-            dataIndex:'Date',
+        {   
+            dataIndex:'datetime',
+            key: 'datetime',
+            title: (
+                <span
+                style={{ cursor: 'pointer', userSelect: 'none' }}
+                onClick={() =>
+                    setSortedInfo(prev => ({
+                    columnKey: 'datetime',
+                    order: prev.order === 'ascend' ? 'descend' : 'ascend'
+                    }))
+                }
+                >
+                Date & Time
+                {sortedInfo.columnKey === 'datetime' &&
+                    (sortedInfo.order === 'ascend' ? ' ⬆️' : ' ⬇️')}
+                </span>
+            ),
+            sorter: (a, b) => {
+                const dateTimeA = dayjs(a.date).hour(dayjs(a.time).hour()).minute(dayjs(a.time).minute()).second(dayjs(a.time).second());
+                const dateTimeB = dayjs(b.date).hour(dayjs(b.time).hour()).minute(dayjs(b.time).minute()).second(dayjs(b.time).second());
+                    return dateTimeA.valueOf() - dateTimeB.valueOf();
+            },
+            sortOrder: sortedInfo.columnKey === 'datetime' && sortedInfo.order,
+            showSorterTooltip: false,
             render: (text, record) => {
                 return(
                     <span>
