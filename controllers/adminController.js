@@ -54,11 +54,11 @@ const changeAccountStatusController = async( req, res ) => {
             {
                 $set: { isDoctor: true },
                 $push: {
-                notification: {
-                    type: "doctors-account-requested-updated",
-                    message: "Your Doctors Account Request has approved",
-                    path: "/notifications"
-                }
+                    notification: {
+                        type: "doctors-account-requested-updated",
+                        message: "Your Doctors Account Request has approved",
+                        path: "/notifications"
+                    }
                 }
             },
             { new: true }
@@ -69,6 +69,46 @@ const changeAccountStatusController = async( req, res ) => {
             success: false,
             message: "Error in Account Status change",
             err
+        })
+    }
+}
+const removeDoctorController = async(req, res) => {
+    try{
+        const {doctorsId} = req.body
+        console.log(doctorsId)
+        const doctor = await doctorsModel.findOne({userId: doctorsId})
+        await doctor.deleteOne();
+        await appointmentModel.updateMany({doctorId: doctorsId},
+            {
+                $set: {
+                    status: "Canceled",
+                    date: null,
+                    time: null
+                },
+            },
+        )
+        await usersModel.findByIdAndUpdate(doctorsId,
+            {
+                $set: {isDoctor: false},
+                $push: {
+                    notification:{
+                        type: "doctors-account-update",
+                        message: "You have been remove as a Doctor",
+                        path: "/notifications"
+                    }
+                }
+            },
+            {new: true}
+        );
+        res.status(204).json({
+            success: true,
+            message: "Remove SuccessFully!"
+        })
+    } catch(err){
+        console.log(err)
+        res.status(500).json({
+            success: false,
+            message: 'Failed to Remove Doctor',
         })
     }
 }
@@ -114,7 +154,8 @@ const deleteAppointments = async ( req, res ) => {
 module.exports = {
     getAllDoctorsController, 
     getAllUsersController, 
-    changeAccountStatusController, 
+    changeAccountStatusController,
+    removeDoctorController, 
     getAllAppointments,
     deleteAppointments,
 }
