@@ -19,7 +19,7 @@ const Notification = () => {
             </Button>
           </div>
 
-          {notification.map((notificationMsg, index) => (
+          {[...notification].reverse().map((notificationMsg, index) => (
             <div
               key={index}
               className="card"
@@ -27,7 +27,7 @@ const Notification = () => {
               style={{cursor:"pointer"}}
             >
               <div className="card-text">
-                {notificationMsg.message}
+                &#9993;{notificationMsg.message}
               </div>
             </div>
           ))}
