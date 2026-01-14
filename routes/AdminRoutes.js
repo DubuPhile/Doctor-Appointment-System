@@ -10,6 +10,8 @@ router.get('/getAllDoctors', adminController.getAllDoctorsController);
 
 router.post('/changeAccountStatus', adminController.changeAccountStatusController)
 
+router.delete('/removeDoctor', adminController.removeDoctorController)
+
 //get all Appointments
 router.get('/getAllAppointments', adminController.getAllAppointments) 
 router.delete('/delete-appointment', adminController.deleteAppointments) 
