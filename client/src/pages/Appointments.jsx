@@ -12,6 +12,7 @@ import useMediaQuery from "../hooks/useMediaQuery";
 const Appointments = () => {
     const {userId, isDoctor} = useUserInfo();
     const [Appointments, setAppointments] = useState([]);
+    const [sortedInfo, setSortedInfo] = useState({})
     const isMobile = useMediaQuery("(max-width: 768px)");
     const axiosPrivate = useAxiosPrivate();
     const dispatch = useDispatch();
@@ -62,7 +63,9 @@ const Appointments = () => {
             render: (text, record) => {
                 return(
                     <span>
-                        {record.doctorInfo.firstName + " " + record.doctorInfo.lastName}
+                        {record?.doctorInfo
+                            ? `${record.doctorInfo.firstName} ${record.doctorInfo.lastName}`
+                            : "N/A"}
                     </span>
                 )
             }
@@ -108,6 +111,11 @@ const Appointments = () => {
             sortOrder: sortedInfo.columnKey === 'datetime' && sortedInfo.order,
             showSorterTooltip: false,
             render: (text, record) => {
+                const hasDate = record?.date;
+                const hasTime = record?.time;
+                if (!hasDate && !hasTime) {
+                    return <span>—</span>; 
+                }
                 return(
                     <span>
                         {dayjs(record.date).format('DD-MM-YYYY')} &nbsp;
