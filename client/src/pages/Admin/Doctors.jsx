@@ -52,6 +52,22 @@ const Doctors = () => {
       setIsLoading(false)
     }
   }
+
+  const handleRemove = async(record) => {
+    setIsLoading(true)
+    try{
+      const res = await axiosPrivate.delete('/admin/removeDoctor', {data: {doctorsId: record.userId}})
+
+      if(res.data.success & res.status === 204){
+        message.success(res.data.message)
+      }
+    } catch(err){
+      console.log(err)
+      message.error('Cannot remove at this time!');
+    } finally{
+      setIsLoading(false)
+    }
+  }
   
   const columns = [
     {
@@ -74,9 +90,11 @@ const Doctors = () => {
       dataIndex: 'actions',
       render: (text, record) => (
         <div className="d-flex">
-          {record.status === 'pending' 
+          {
+          record.status === 'pending' 
             ? <button className="btn btn-success" onClick={() => handleAccountStatus(record, 'approved')}>Approve</button> 
-            : <button className="btn btn-danger">Reject</button>}
+            : <button className="btn btn-danger" onClick={() => handleRemove(record)}>Remove</button>
+          }
         </div>
       )
     },
