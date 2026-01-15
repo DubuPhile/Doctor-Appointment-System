@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Layout from "../../components/Layout"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
-import { Table } from "antd";
+import { Table, message } from "antd";
 import Spinner from "../../components/Spinner";
 
 
@@ -40,7 +40,7 @@ const Doctors = () => {
   const handleAccountStatus = async( record, status ) => {
     setIsLoading(true)
     try{
-      const res = await axiosPrivate.post('/admin/changeAccountStatus', {doctorsId: record._id, userId: record.userId, status: status})
+      const res = await axiosPrivate.put('/admin/changeAccountStatus', {doctorsId: record._id, status: status})
   
       if(res.data.success){
         message.success(res.data.message);
@@ -58,9 +58,10 @@ const Doctors = () => {
     try{
       const res = await axiosPrivate.delete('/admin/removeDoctor', {data: {doctorsId: record.userId}})
 
-      if(res.data.success & res.status === 204){
-        message.success(res.data.message)
+      if(res.status === 204){
+        message.success("Remove SuccessFully!")
       }
+      setDoctors(prev => prev.filter(doc => doc.userId !== record.userId));
     } catch(err){
       console.log(err)
       message.error('Cannot remove at this time!');
