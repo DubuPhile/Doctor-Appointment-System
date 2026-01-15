@@ -37,7 +37,7 @@ const Profile = () => {
     const handleFinish = async (values) => {
     try {
       dispatch(showLoading());
-      const { data } = await axiosPrivate.post("/doctor/updateProfile", {
+      const { data } = await axiosPrivate.put("/doctor/updateProfile", {
         ...values,
         timings: values.timings.map(t => dayjs(t)), 
         userId: param.id,
@@ -49,14 +49,10 @@ const Profile = () => {
     } catch (error) {
       dispatch(hideLoading());
       console.log(error)
-      if(error.response?.status === 409){
-        message.error('You have already applied for a doctor account')
-      }
-      else{
-        message.error("Error applying for doctor account.");
+        message.error("Error to edit Profile Account");
       }
     }
-  }
+  
   return (
     <Layout>
         <h1>Manage Profile</h1>
