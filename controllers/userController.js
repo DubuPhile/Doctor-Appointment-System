@@ -47,7 +47,7 @@ const loginController = async(req, res) => {
                 )} minutes.`
             });
         }
-        console.log(foundUser.lockUntil)
+
         const match = await bcrypt.compare(password, foundUser.password);
         if (!match) {
             // Increment loginAttempts
@@ -286,9 +286,16 @@ const bookAppointmentController = async( req, res ) => {
         // Convert date & time to ISO for comparison/storage
         const appointmentDate = moment.tz(req.body.date, 'DD-MM-YYYY', "Asia/Manila")
         const appointmentTime = moment.tz(`${req.body.date} ${req.body.time}`, 'DD-MM-YYYY HH:mm', "Asia/Manila")
-        console.log(appointmentDate)
-        console.log(appointmentTime)
-
+        const timestamp = moment(
+        `${req.body.date} ${req.body.time}`,
+        "DD-MM-YYYY HH:mm"
+        ).valueOf();
+        if (timestamp < Date.now()) { 
+            return res.status(400).send({
+                success:false,
+                message: "Cannot book due to Late Date!"
+            })
+        }
         // Check if appointment already exists
         const existing = await appointmentModel.exists({
             doctorId: req.body.doctorId,
@@ -307,7 +314,6 @@ const bookAppointmentController = async( req, res ) => {
         req.body.date = appointmentDate;
         req.body.time = appointmentTime;
         req.body.status = "pending"
-        console.log(req.body.doctorId)
         const newAppointment = new appointmentModel(req.body)
         await newAppointment.save();
         const user = await userModel.findById( req.body.doctorInfo.userId );
@@ -337,7 +343,16 @@ const bookAvailabilityController = async( req, res ) => {
         const appointmentMoment = moment(time, "HH:mm");
         const appointmentMinutes =
             appointmentMoment.hours() * 60 + appointmentMoment.minutes();
-
+        const timestamp = moment(
+        `${date} ${time}`,
+        "DD-MM-YYYY HH:mm"
+        ).valueOf();
+        if (timestamp < Date.now()) { 
+            return res.status(400).send({
+                success:false,
+                message: "Cannot book due to Late Date!"
+            })
+        }
         // Doctor start & end times
         const doctor = await doctorsModel.findOne({userId: doctorId});
         if (!doctor) {
@@ -409,7 +424,7 @@ const userAppointmentsController = async( req, res ) => {
     try{
         const {userId} = req.query
         const appointments = await appointmentModel.find({userId: userId}).populate('doctorInfo').populate('userInfo');
-        console.log(appointments.time)
+
         res.status(200).send({
             success: true,
             message: "Users Appointments Fetch Successfully",
