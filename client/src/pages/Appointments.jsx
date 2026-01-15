@@ -37,7 +37,7 @@ const Appointments = () => {
     const handleStatus = async(record , status) => {
         try{
             dispatch(showLoading())
-            const res = await axiosPrivate.post ('/doctor/update-status', {appointmentsId: record._id, status});
+            const res = await axiosPrivate.put('/doctor/update-status', {appointmentsId: record._id, status});
             if(res.data.success){
                 message.success(res.data.message);
                 getAppointments();
