@@ -44,7 +44,7 @@ const Notification = () => {
               Delete All Read
             </Button>
           </div>
-          {seenNotification.map((notificationMsg, index) => (
+          {[...seenNotification].reverse().map((notificationMsg, index) => (
               <div
                 key={index}
                 className="card"
