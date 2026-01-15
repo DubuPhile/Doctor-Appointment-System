@@ -46,32 +46,54 @@ const getAllDoctorsController = async( req, res ) => {
 }
 
 const changeAccountStatusController = async( req, res ) => {
-    try{
-        const {doctorsId, status} = req.body
-        const doctor = await doctorsModel.findByIdAndUpdate(doctorsId, {status})  
-        await usersModel.findByIdAndUpdate(
-            doctor.userId,
-            {
-                $set: { isDoctor: true },
-                $push: {
-                    notification: {
-                        type: "doctors-account-requested-updated",
-                        message: "Your Doctors Account Request has approved",
-                        path: "/notifications"
-                    }
-                }
-            },
+    try {
+        const { doctorsId, status } = req.body;
+
+        const doctor = await doctorsModel.findByIdAndUpdate(
+            doctorsId,
+            { status },
             { new: true }
         );
-    } catch(err){
-        console.log(err)
+
+        if (!doctor) {
+            return res.status(404).send({
+                success: false,
+                message: "Doctor not found",
+            });
+        }
+
+        const userUpdate = {
+            $push: {
+                notification: {
+                    type: "doctors-account-requested-updated",
+                    message:
+                        status === "approved"
+                            ? "Your doctor account request has been approved"
+                            : "Your doctor account request has been rejected",
+                    path: "/notifications",
+                },
+            },
+        };
+
+        if (status === "approved") {
+            userUpdate.$set = { isDoctor: true };
+        }
+
+        await usersModel.findByIdAndUpdate(doctor.userId, userUpdate);
+
+        return res.status(200).send({
+            success: true,
+            message: "Account status updated successfully",
+        });
+    } catch (err) {
+        console.log(err);
         res.status(500).send({
             success: false,
-            message: "Error in Account Status change",
-            err
-        })
+            message: "Error in account status change",
+            error: err.message,
+        });
     }
-}
+};
 const removeDoctorController = async(req, res) => {
     try{
         const {doctorsId} = req.body
