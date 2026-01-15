@@ -104,6 +104,9 @@ const BookingPage = () => {
         }
       } catch(err){
         console.log(err)
+        if (err.response?.status === 400){
+          message.error(err.response.data.message)
+        }
       } 
     }
     
