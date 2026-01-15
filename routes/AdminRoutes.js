@@ -8,7 +8,7 @@ router.get('/getAllUsers', adminController.getAllUsersController);
 // get all doctors
 router.get('/getAllDoctors', adminController.getAllDoctorsController);
 
-router.post('/changeAccountStatus', adminController.changeAccountStatusController)
+router.put('/changeAccountStatus', adminController.changeAccountStatusController)
 
 router.delete('/removeDoctor', adminController.removeDoctorController)
 
