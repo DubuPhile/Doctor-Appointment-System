@@ -86,9 +86,9 @@ const updateStatusController = async( req, res ) => {
         const appointments = await appointmentModel.findByIdAndUpdate(appointmentsId, {status})
         const user = await usersModel.findOne({_id: appointments.userId})
         user.notification.push({
+            from: `${req.user.user}`,
             type: "New-appointment-request",
             message: `Your appointment has been updated ${status}`,
-            path: "/user/appointments"
         });
         await user.save();
         res.status(200).send({
