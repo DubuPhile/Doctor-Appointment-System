@@ -5,73 +5,77 @@ import { message } from "antd";
 
 const useNotification = () => {
   const axiosPrivate = useAxiosPrivate();
-  const [notification, setNotification] = useState([]);
-  const [seenNotification, setSeenNotification] = useState([]);
+  const [unread, setUnread] = useState([]);
+  const [read, setRead] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
   const {auth} = useAuth();
 
   //Fetch notifications
-  const fetchNotifications = useCallback(async () => {
+  const getNotifications = async () => {
     try {
-      const { data } = await axiosPrivate.get("/notifications");
+      setLoading(true);
+      const res = await axiosPrivate.get("/notifications");
 
-      setNotification(data.notification || []);
-      setSeenNotification(data.seenNotification || []);
+      if (res.data.success) {
+        setUnread(res.data.unread);
+        setRead(res.data.read);
+      }
     } catch (err) {
-      console.error("Notification error:", err);
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  }, [axiosPrivate]);
+  };
+
+  useEffect(() => {
+  if (auth?.accessToken) {
+      getNotifications();
+  }
+  }, [ auth?.accessToken]);
 
   //Mark all as read
-  const markAllAsRead = useCallback(async () => {
+  const markAllAsRead = async () => {
     try {
-      setLoading(true);
-
-      const { data } = await axiosPrivate.get(
-        "/notifications?markAsRead=true"
-      );
-
-      setNotification([]); // unread cleared
-      setSeenNotification(data.seenNotification || []);
+      await axiosPrivate.get("/notifications?markAsRead=true");
+      getNotifications();
       message.success('All message mark as read!')
     } catch (err) {
-      console.error("Mark as read error:", err);
-    } finally {
-      setLoading(false);
+      console.error(err);
     }
-  }, [axiosPrivate]);
-  //Delete All Notifications
-  const DeleteAllNotification = useCallback(async () => {
+  };
+
+  const deleteRead = async () => {
     try {
-      setLoading(true);
-
-      const { data } = await axiosPrivate.get(
-        "/notifications?deleteRead=true"
-      );
-
-      setNotification([]); // unread cleared
-      setSeenNotification([]);
+      await axiosPrivate.get("/notifications?deleteRead=true");
+      getNotifications();
       message.success('All Notifications has been Deleted!')
     } catch (err) {
-      console.error("Mark as read error:", err);
-    } finally {
-      setLoading(false);
+      console.error(err);
     }
-  }, [axiosPrivate]);
-
-    useEffect(() => {
-    if (auth?.accessToken) {
-        fetchNotifications();
+  };
+  const openNotification = async (notification) => {
+    try {
+      if (!notification.seen) {
+        await axiosPrivate.patch(`/notifications/${notification._id}/read`);
+        getNotifications();
+      }
+      setSelectedNotification(notification);
+    } catch (err) {
+      console.error(err);
     }
-    }, [fetchNotifications, auth?.accessToken]);
+  };
 
   return {
-    notification,
-    seenNotification,
+    unread,
+    read,
     loading,
-    fetchNotifications,
+    getNotifications,
     markAllAsRead,
-    DeleteAllNotification,
+    deleteRead,
+    openNotification,
+    selectedNotification,
+    setSelectedNotification
   };
 };
 
