@@ -109,6 +109,7 @@ const loginController = async(req, res) => {
 
 //apply Doctor Controller
 const applyDoctorController = async( req, res ) => {
+    const User = req.user.user
     try {
         let {
             firstName,
@@ -161,16 +162,16 @@ const applyDoctorController = async( req, res ) => {
         });
 
         await newDoctor.save();
-
+        console.log(User)
         const adminUser = await userModel.findOne({ "roles.Admin": 5150 });
         if (adminUser) {
             const newNotification = {
+                from: User,
                 type: "apply-doctor-request",
                 message: `${newDoctor.firstName} ${newDoctor.lastName} has applied for a Doctor account`,
                 data: {
                     doctorId: newDoctor._id,
                     name: newDoctor.firstName + " " + newDoctor.lastName,
-                    path: "/admin/doctors",
                 },
                 createdAt: new Date(),
             };
@@ -198,70 +199,100 @@ const applyDoctorController = async( req, res ) => {
 
 // get the Notifications
 const getUserNotifications = async (req, res) => {
-  try {
-    if (!req.user.user) {
+    try {
+    const userId = req.user.user;
+    if (!userId) {
       return res.status(401).json({
         success: false,
-        message: 'Unauthorized',
-      })
+        message: "Unauthorized",
+      });
     }
 
-    const user = await userModel
-      .findOne({ user: req.user.user });
-      
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-      })
-    }
-    //to mark all Notifications as Read
-    const { markAsRead } = req.query;
+    const { markAsRead, deleteRead } = req.query;
 
+    // Mark all as read
     if (markAsRead === "true") {
-      user.seenNotification.push(...user.notification);
-      user.notification = [];
-      await user.save();
+      await userModel.updateOne(
+        { user: userId },
+        { $set: { "notification.$[].seen": true } }
+      );
 
       return res.status(200).json({
         success: true,
         message: "All notifications marked as read",
-        notification: [],
-        seenNotification: user.seenNotification,
       });
     }
-    //to delete all Read notification
-    const { deleteRead } = req.query;
 
-    if( deleteRead === 'true') {
-        user.notification = [];
-        user.seenNotification = [];
-        await user.save();
-        user.password = undefined;
+    // Delete only read notifications
+    if (deleteRead === "true") {
+      await userModel.updateOne(
+        { user: userId },
+        {
+          $pull: {
+            notification: { seen: true },
+          },
+        }
+      );
 
-        return res.status(200).json({
+      return res.status(200).json({
         success: true,
-        message: "Notifications Deleted SuccessFully",
-        notification: [],
-        seenNotification: [],
-        password: undefined,
+        message: "Read notifications deleted",
       });
     }
 
-    res.status(200).json({
-      success: true,
-      notification: user.notification ?? [],
-      seenNotification: user.seenNotification ?? [],
-    })
-  } catch (error) {
-    console.error('Get notifications error:', error)
+    // Fetch notifications
+    const user = await userModel.findOne(
+      { user: userId },
+      { notification: 1 }
+    );
 
+    return res.status(200).json({
+      success: true,
+      unread: user.notification.filter(n => !n.seen),
+      read: user.notification.filter(n => n.seen),
+    });
+
+  } catch (error) {
+    console.error("Get notifications error:", error);
     res.status(500).json({
       success: false,
-      message: 'Server error',
-    })
+      message: "Server error",
+    });
   }
 }
+const markNotificationAsRead = async (req, res) => { 
+    try { 
+        const userId = req.user.id; 
+        const { notificationId } = req.params; 
+        if (!userId) { 
+            return res.status(401).json({ 
+                success: false, 
+                message: "Unauthorized", }); 
+            } 
+        const result = await userModel.updateOne( 
+            { _id: userId, "notification._id": notificationId }, 
+            { 
+                $set: { "notification.$.seen": true, }, 
+            } 
+        ); 
+        if (result.matchedCount === 0) { 
+            return res.status(404).json({ 
+                success: false, 
+                message: "Notification not found", 
+            }); 
+        } 
+        res.status(200).json({ 
+            success: true, 
+            message: "Notification marked as read", 
+        }); 
+    } catch (error) { 
+        console.error("Mark notification read error:", error); 
+        res.status(500).json({ 
+            success: false, 
+            message: "Server error", 
+        }); 
+    } 
+};
 
 const getApprovedDoctorController = async( req, res ) => {
     try{
@@ -318,9 +349,9 @@ const bookAppointmentController = async( req, res ) => {
         await newAppointment.save();
         const user = await userModel.findById( req.body.doctorInfo.userId );
         user.notification.push({
+            from: `${req.user.user}`,
             type: "New-appointment-request",
             message:`A new appointment Request from ${req.body.userInfo.user}`,
-            path: '/user/appointments'
         })
         await user.save();
         res.status(200).send({
@@ -448,4 +479,5 @@ module.exports = {
     bookAppointmentController,
     bookAvailabilityController,
     userAppointmentsController,
+    markNotificationAsRead,
 }
