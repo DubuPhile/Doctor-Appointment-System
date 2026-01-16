@@ -9,7 +9,7 @@ import { useState } from "react"
 
 const Layout = ({children}) => {
     const {user} = useUserInfo();
-    const {notification} = useNotif();
+    const {unread} = useNotif();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
 
@@ -45,7 +45,7 @@ const Layout = ({children}) => {
             <div className="content">
                 <header className='header'>
                     <div className="header-content" style={{cursor: 'pointer'}}>
-                        <Badge count ={notification.length} onClick={() => {navigate('/notification')}}>
+                        <Badge count ={unread.length} onClick={() => {navigate('/notification')}}>
                         <i className="fa-solid fa-bell" ></i>
                         </Badge>
                         <Link to ='/profile'>{ user || 'Guest'}</Link>
