@@ -44,14 +44,17 @@ const userSchema = new schema({
         enum: ['local', 'google','firebase'],
         default: 'local',
     },
-    notification: {
-        type: Array,
-        default: [],
-    },
-    seenNotification: {
-        type: Array,
-        default: [],
-    },
+    notification: [
+        {
+            _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+            type: { type: String, required: true },
+            message: { type: String, required: true },
+            data: { type: Object },
+            seen: { type: Boolean, default: false },
+            createdAt: { type: Date, default: Date.now },
+            from: {type: String, default: "unknown"}
+        }
+    ],
     refreshToken: {
         type:String,
         select: false,
