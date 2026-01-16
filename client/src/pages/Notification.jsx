@@ -1,61 +1,91 @@
 import Layout from '../components/Layout'
-import { Button, Tabs } from 'antd'
+import { Button, Tabs, Empty, Modal } from 'antd'
 import { useNavigate } from 'react-router-dom';
 import useNotif from '../hooks/useNotif';
+import dayjs from 'dayjs';
 
 const Notification = () => {
-  const {notification, markAllAsRead, seenNotification, DeleteAllNotification} = useNotif();
-  const navigate = useNavigate();
+  const {
+    read, 
+    unread, 
+    markAllAsRead, 
+    deleteRead,
+    openNotification, 
+    selectedNotification, 
+    setSelectedNotification
+  } = useNotif();
   
   const tabItems = [
     {
       key: "0",
-      label: "Unread",
+      label: `Unread(${unread.length})`,
       children: (
         <>
           <div className="d-flex justify-content-end">
-            <Button className="p-2" onClick={markAllAsRead} style={{cursor: "pointer"}}>
+            <Button className="p-2" onClick={markAllAsRead} disabled={!unread.length} style={{cursor: "pointer"}}>
               Mark All Read
             </Button>
           </div>
 
-          {[...notification].reverse().map((notificationMsg, index) => (
-            <div
-              key={index}
-              className="card"
-              onClick={() => navigate(notificationMsg.data.path)}
-              style={{cursor:"pointer"}}
-            >
-              <div className="card-text">
-                &#9993;{notificationMsg.message}
-              </div>
-            </div>
-          ))}
+          {unread.length === 0 ? (
+            <Empty description="No unread notifications" />
+          ) : (
+            [...unread]
+              .reverse()
+              .map((notification) => (
+                <div
+                  key={notification._id}
+                  className="card mb-2 fw-bold"
+                  onClick={() => openNotification(notification)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="d-flex justify-content-between align-items-start me-3">
+                    <div className="card-text">
+                      &#9993;{notification.message}
+                    </div>
+                    <small className="text-muted">
+                      {dayjs(notification.createdAt).format("MMM DD, YYYY hh:mm A")}
+                    </small>
+                  </div>
+                </div>
+              ))
+          )}
         </>
       ),
     },
     {
       key: "1",
-      label: "Read",
+      label: `Read(${read.length})`,
       children: (
         <>
           <div className="d-flex justify-content-end">
-            <Button className="p-2" onClick={DeleteAllNotification}>
+            <Button className="p-2" onClick={deleteRead} disabled={!read.length}>
               Delete All Read
             </Button>
           </div>
-          {[...seenNotification].reverse().map((notificationMsg, index) => (
-              <div
-                key={index}
-                className="card"
-                onClick={() => {navigate(notificationMsg.data.path)}}
-                style={{cursor:"pointer"}}
-              >
-                <div className="card-text">
-                  {notificationMsg.message}
+          {read.length === 0 ? (
+            <Empty description="No read notifications" />
+          ) : (
+            [...read]
+              .reverse()
+              .map((notification) => (
+                <div
+                  key={notification._id}
+                  className="card mb-2 opacity-75 "
+                  onClick={() => openNotification(notification)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="d-flex justify-content-between align-items-start me-3">
+                    <div className="card-text">
+                      &#9993;{notification.message}
+                    </div>
+                    <small className="text-muted">
+                      {dayjs(notification.createdAt).format("MMM DD, YYYY hh:mm A")}
+                    </small>
+                  </div>
                 </div>
-              </div>
-          ))}
+              ))
+          )}
         </>
       ),
     },
@@ -64,6 +94,19 @@ const Notification = () => {
     <Layout>
       <h4 className='p-3 text-center'>Notifications</h4>
       <Tabs defaultActiveKey="0" items={tabItems} />
+      <Modal
+        open={!!selectedNotification}
+        title={`${selectedNotification?.from}`}
+        onCancel={() => setSelectedNotification(null)}
+        footer={null}
+      >
+        <p>{selectedNotification?.message}</p>
+        {selectedNotification?.createdAt && (
+          <small className="text-muted">
+            {dayjs(selectedNotification.createdAt).format("MMM DD, YYYY hh:mm A")}
+          </small>
+        )}
+      </Modal>
     </Layout>
   )
 }
