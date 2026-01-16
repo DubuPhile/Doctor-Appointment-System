@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getUserNotifications } = require('../controllers/userController')
+const userController = require('../controllers/userController')
 
-router.get('/', getUserNotifications);
+router.get('/', userController.getUserNotifications);
+router.patch('/:notificationId/read', userController.markNotificationAsRead)
 
 module.exports = router
