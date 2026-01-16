@@ -65,12 +65,12 @@ const changeAccountStatusController = async( req, res ) => {
         const userUpdate = {
             $push: {
                 notification: {
+                    from: `${req.user.user}`,
                     type: "doctors-account-requested-updated",
                     message:
                         status === "approved"
                             ? "Your doctor account request has been approved"
                             : "Your doctor account request has been rejected",
-                    path: "/notifications",
                 },
             },
         };
@@ -114,6 +114,7 @@ const removeDoctorController = async(req, res) => {
                 $set: {isDoctor: false},
                 $push: {
                     notification:{
+                        from: `${req.user.user}`,
                         type: "doctors-account-update",
                         message: "You have been remove as a Doctor",
                         path: "/notifications"
