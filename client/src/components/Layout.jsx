@@ -44,11 +44,11 @@ const Layout = ({children}) => {
             </section>
             <div className="content">
                 <header className='header'>
-                    <div className="header-content" style={{cursor: 'pointer'}}>
+                    <div className="header-content">
                         <Badge count ={unread.length} onClick={() => {navigate('/notification')}}>
-                        <i className="fa-solid fa-bell" ></i>
+                        <i className="fa-solid fa-bell" style={{cursor: "pointer"}}></i>
                         </Badge>
-                        <Link to ='/profile'>{ user || 'Guest'}</Link>
+                        <Link to ='/profile' className="ProfileLayout">{ user || 'Guest'}</Link>
                     </div>
                 </header>
                 <div className='body'>{ children }</div>
