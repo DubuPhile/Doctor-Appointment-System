@@ -75,6 +75,7 @@ const Login = () => {
             required 
             autoComplete='username'
             value={user}
+            style={{backgroundColor: "rgba(22, 22, 22, 0.4)"}}
             onChange ={ (e) => setUser(e.target.value)}
             />
           </Form.Item>
@@ -86,6 +87,7 @@ const Login = () => {
               placeholder='Enter your Password' 
               autoComplete='current-password' 
               required
+              style={{backgroundColor: "rgba(22, 22, 22, 0.4)"}}
               value={password}
               onChange ={ (e) => setPassword(e.target.value)}
             />
