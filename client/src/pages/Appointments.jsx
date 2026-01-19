@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { Table } from "antd"
 import { message } from "antd";
 import useMediaQuery from "../hooks/useMediaQuery";
+import { confirmAction } from "../components/Confirmation";
 
 const Appointments = () => {
     const {userId, isDoctor} = useUserInfo();
@@ -139,12 +140,12 @@ const Appointments = () => {
                         <div className="d-flex">
                             <button 
                                 className="btn btn-success ms-2"
-                                onClick={() => handleStatus(record,'approved')}
+                                onClick={() => confirmAction({onOk: () => handleStatus(record,'approved')})}
                             >Approved
                             </button>
                             <button 
                                 className="btn btn-danger ms-2"
-                                onClick={() => handleStatus(record,'rejected')}
+                                onClick={() => confirmAction({onOk: () =>handleStatus(record,'rejected')})}
                             >Reject
                             </button>
                         </div>
