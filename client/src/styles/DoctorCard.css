@@ -23,6 +23,7 @@
 .doctorImg{
     width: 150px;
     height: 150px;
+    border-radius: 100%;
 }
 .DoctorDescription{
     margin: 10px;
