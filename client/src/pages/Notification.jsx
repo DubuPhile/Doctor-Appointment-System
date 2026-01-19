@@ -1,8 +1,8 @@
 import Layout from '../components/Layout'
 import { Button, Tabs, Empty, Modal } from 'antd'
-import { useNavigate } from 'react-router-dom';
 import useNotif from '../hooks/useNotif';
 import dayjs from 'dayjs';
+import { confirmAction } from '../components/Confirmation';
 
 const Notification = () => {
   const {
@@ -21,7 +21,7 @@ const Notification = () => {
       label: `Unread(${unread.length})`,
       children: (
         <>
-          <div className="d-flex justify-content-end">
+          <div className="d-flex justify-content-end mb-2">
             <Button className="p-2" onClick={markAllAsRead} disabled={!unread.length} style={{cursor: "pointer"}}>
               Mark All Read
             </Button>
@@ -58,8 +58,12 @@ const Notification = () => {
       label: `Read(${read.length})`,
       children: (
         <>
-          <div className="d-flex justify-content-end">
-            <Button className="p-2" onClick={deleteRead} disabled={!read.length}>
+          <div className="d-flex justify-content-end mb-2">
+            <Button 
+              className="p-2" 
+              onClick={ () => confirmAction({onOk: deleteRead})} 
+              disabled={!read.length}
+            >
               Delete All Read
             </Button>
           </div>
@@ -102,7 +106,7 @@ const Notification = () => {
       >
         <p>{selectedNotification?.message}</p>
         {selectedNotification?.createdAt && (
-          <small className="text-muted">
+          <small style={{color: "light-dark(rgb(41, 41, 41),white)"}}>
             {dayjs(selectedNotification.createdAt).format("MMM DD, YYYY hh:mm A")}
           </small>
         )}
