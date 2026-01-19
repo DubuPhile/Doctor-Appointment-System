@@ -21,6 +21,7 @@ const DoctorList = ({ doctor }) => {
                     />
                 </div>
                 <p className = "doctorName">Dr. { doctor.firstName + " " + doctor.lastName }</p>
+                <p>{doctor.specialization}</p>
                 <p><b>Schedule: {doctor.timings?.map(t => t.format('HH:mm')).join(' - ')}</b></p>
             </div>
             <div className = "flip-card-back">
