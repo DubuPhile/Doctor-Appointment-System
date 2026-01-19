@@ -4,6 +4,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import { Table, message } from "antd";
 import Spinner from "../../components/Spinner";
+import { confirmAction } from "../../components/Confirmation";
 
 
 const Doctors = () => {
@@ -93,8 +94,27 @@ const Doctors = () => {
         <div className="d-flex">
           {
           record.status === 'pending' 
-            ? <button className="btn btn-success" onClick={() => handleAccountStatus(record, 'approved')}>Approve</button> 
-            : <button className="btn btn-danger" onClick={() => handleRemove(record)}>Remove</button>
+            ? <button className="btn btn-success" onClick={() => 
+              confirmAction({
+                  title: "Are you sure to Approve this Doctor ?",
+                  content: " This will have an access to be a Doctor.",
+                  okText: "Yes, Approved",
+                  onOk: () => handleAccountStatus(record, 'approved')
+                })
+              }
+              >
+                Approve
+              </button> 
+            : <button className="btn btn-danger" onClick={() => 
+                confirmAction({
+                  title: "Are you sure you want to remove this Doctor ?",
+                  content: " This will permanently deleted.",
+                  okText: "Yes, remove",
+                  onOk: () => handleRemove(record)
+                })
+              }>
+                Remove
+              </button>
           }
         </div>
       )
