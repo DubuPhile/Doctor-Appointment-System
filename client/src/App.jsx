@@ -21,12 +21,34 @@ import BookingPage from './pages/BookingPage'
 import Appointments from './pages/Appointments'
 import useAuth from './hooks/useAuth'
 
+import { ConfigProvider, theme } from "antd";
+import { useEffect, useState } from "react";
+
+const { defaultAlgorithm, darkAlgorithm } = theme;
+const getSystemTheme = () =>
+  window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 function App() {
   const {auth} = useAuth();
   const {loading} = useSelector(state => state.alerts)
+
+  const [isDark, setIsDark] = useState(getSystemTheme());
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const handler = (e) => setIsDark(e.matches);
+
+    media.addEventListener("change", handler);
+    return () => media.removeEventListener("change", handler);
+  }, []);
   return (
-    <>  
+    <>
+    <ConfigProvider
+      theme={{
+        algorithm: isDark ? darkAlgorithm : defaultAlgorithm,
+      }}
+    >  
       <NotificationProvider>
         {loading ? (<Spinner/>) : (
           <Routes>
@@ -66,6 +88,7 @@ function App() {
           </Routes>
         )}
       </NotificationProvider>
+      </ConfigProvider>
     </>
   )
 }
