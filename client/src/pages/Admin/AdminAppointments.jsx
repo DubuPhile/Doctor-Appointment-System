@@ -6,6 +6,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate"
 import dayjs from 'dayjs'
 import { Table, message } from "antd"
 import useMediaQuery from "../../hooks/useMediaQuery";
+import { confirmAction } from "../../components/Confirmation";
 
 const Appointments = () => {
     const [Appointments, setAppointments] = useState([]);
@@ -184,7 +185,14 @@ const Appointments = () => {
                 <div className="d-flex">
                     <button 
                         className="btn btn-danger ms-2"
-                        onClick={() => handleDelete(record)}
+                        onClick={() => 
+                            confirmAction({
+                                title: "Are you sure you want to delete?",
+                                content: " This will permanently deleted.",
+                                okText: "Yes, delete",
+                                onOk: () => handleDelete(record)
+                            })
+                        }
                     >Delete
                     </button>
                 </div>
