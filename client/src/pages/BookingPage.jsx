@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { useParams } from "react-router-dom";
 import { DatePicker, TimePicker } from "antd";
 import {message} from 'antd';
+import { confirmAction } from "../components/Confirmation";
 
 const BookingPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -46,8 +47,8 @@ const BookingPage = () => {
     }
     },[])
 
-    const handleBooking = async(e) => {
-      e.preventDefault();
+    const handleBooking = async() => {
+
       if (!isAvailable) {
         return message.warning("Please check availability first");
       }
@@ -139,7 +140,13 @@ const BookingPage = () => {
                 </button>
                 <button 
                 className="btn btn-success mt-2"
-                onClick={handleBooking}
+                onClick={() => 
+                  confirmAction({
+                    title: "Are you sure for the Schedule?",
+                    content: "This will be submitted to the Doctor.",
+                    onOk: () =>handleBooking()
+                  })
+                }
                 disabled = {!isAvailable}
                 >
                   Book Now!
