@@ -112,7 +112,7 @@
 }
 
 .header{
-    height: 8vh;
+    height: 9vh;
     margin-bottom: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
     border-radius: 10px;
@@ -127,12 +127,12 @@
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
     background-color: light-dark(white, rgb(41, 41, 41));
     color: light-dark(rgb(41, 41, 41),white);
-    min-height: 100vh;
+    min-height: 90vh;
 }
 @media (max-width: 980px) {
     .body{
         height: auto;
-        min-height: 100%;
+        min-height: 90vh;
     }
 }
 
